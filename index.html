@@ -1,0 +1,3013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matter Mania – KS3 Science Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --solid:#3B82F6; --liquid:#06B6D4; --gas:#F59E0B; --plasma:#EF4444;
+    --bg:#0F0A2E; --card:#1A1240; --card2:#211855; --accent:#7C3AED;
+    --correct:#10B981; --wrong:#EF4444; --text:#F0EDFF; --muted:#8B7EC8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,10,46,.96);backdrop-filter:blur(12px);
+      border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:4px;padding:10px 20px;flex-wrap:wrap;}
+  nav .logo{font-family:'Fredoka One',cursive;font-size:1.4rem;color:#fff;text-shadow:0 0 20px var(--accent);margin-right:10px;white-space:nowrap;}
+  nav button{font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;padding:7px 14px;border:none;border-radius:20px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+  nav button:hover{transform:translateY(-2px);filter:brightness(1.2);}
+  .nav-learn{background:var(--solid);color:#fff;} .nav-lab{background:var(--gas);color:#1a1a1a;}
+  .nav-plasma-btn{background:var(--plasma);color:#fff;} .nav-quiz{background:var(--correct);color:#fff;}
+
+  /* SECTIONS */
+  section{display:none;padding:80px 20px 40px;min-height:100vh;animation:fadeIn .4s ease;}
+  section.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+  h1{font-family:'Fredoka One',cursive;font-size:2.5rem;text-align:center;margin-bottom:10px;}
+  h2{font-family:'Fredoka One',cursive;font-size:1.8rem;margin-bottom:16px;}
+  h3{font-family:'Fredoka One',cursive;font-size:1.3rem;margin-bottom:10px;}
+  .subtitle{text-align:center;color:var(--muted);margin-bottom:30px;font-size:1.05rem;}
+  .section-title{text-align:center;margin-bottom:30px;}
+
+  /* STATE CARDS */
+  .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;max-width:1100px;margin:0 auto 40px;}
+  .state-card{background:var(--card);border-radius:20px;padding:24px;border:2px solid transparent;transition:all .3s;}
+  .state-card:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(124,58,237,.3);}
+  .state-card.solid{border-color:var(--solid);} .state-card.liquid{border-color:var(--liquid);}
+  .state-card.gas{border-color:var(--gas);} .state-card.plasma{border-color:var(--plasma);}
+  .state-card .icon{font-size:2.5rem;margin-bottom:10px;}
+  .state-card .badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:.8rem;font-weight:700;margin-bottom:12px;}
+  .solid .badge{background:var(--solid);} .liquid .badge{background:var(--liquid);}
+  .gas .badge{background:var(--gas);color:#1a1a1a;} .plasma .badge{background:var(--plasma);}
+  .prop-list{list-style:none;font-size:.9rem;line-height:1.8;}
+  .prop-list li::before{content:"✦ ";color:var(--muted);}
+  .examples-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+  .example-tag{background:rgba(255,255,255,.08);border-radius:10px;padding:3px 10px;font-size:.8rem;}
+
+  /* Particle demo canvases — taller to show 10×10 grid properly */
+  .particle-demo{width:100%;height:160px;border-radius:12px;margin-top:12px;background:#0a0620;}
+
+  /* ENERGY BARS */
+  .energy-compare{max-width:800px;margin:0 auto 30px;background:var(--card);border-radius:20px;padding:24px;}
+  .energy-bar-row{display:flex;align-items:center;gap:12px;margin:10px 0;}
+  .energy-label{width:80px;font-weight:700;font-size:.9rem;}
+  .energy-bar{height:28px;border-radius:8px;display:flex;align-items:center;padding-left:10px;font-size:.8rem;font-weight:700;}
+  .eb-solid{background:var(--solid);width:20%;} .eb-liquid{background:var(--liquid);color:#0f0a2e;width:45%;}
+  .eb-gas{background:var(--gas);color:#1a1a1a;width:75%;} .eb-plasma{background:var(--plasma);width:100%;}
+
+  /* DIAGRAM */
+  .diagram-section{max-width:900px;margin:0 auto 40px;background:var(--card);border-radius:20px;padding:30px;}
+  .diagram-wrap{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:12px;}
+  .state-box{width:100px;height:80px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;flex-shrink:0;}
+  .sb-solid{background:var(--solid);} .sb-liquid{background:var(--liquid);color:#0f0a2e;}
+  .sb-gas{background:var(--gas);color:#1a1a1a;} .sb-plasma{background:var(--plasma);}
+  .arrow-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;width:80px;}
+  .arrow-label{font-size:.68rem;color:var(--muted);text-align:center;line-height:1.2;}
+  .arrow-line{font-size:1.4rem;animation:arrowPulse 1.5s ease-in-out infinite;}
+  @keyframes arrowPulse{0%,100%{opacity:.5;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}
+  .diagram-extra{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;}
+  .info-box{background:var(--card2);border-radius:14px;padding:16px;font-size:.88rem;line-height:1.7;}
+  .info-box strong{color:#FFD700;}
+
+  /* LAB */
+  .lab-wrap{max-width:600px;margin:0 auto;}
+  #lab-canvas{display:block;width:100%;height:380px;border-radius:16px;background:#070418;border:2px solid var(--accent);}
+  .lab-controls{margin-top:16px;}
+  .lab-controls label{display:block;font-weight:700;margin-bottom:5px;font-size:.9rem;}
+  input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer;margin-bottom:4px;}
+  .lab-info{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+  .info-chip{background:var(--card);border-radius:10px;padding:8px 14px;font-weight:700;font-size:.88rem;flex:1;text-align:center;min-width:90px;}
+  .ic-temp{border:2px solid var(--gas);color:var(--gas);}
+  .ic-state{border:2px solid var(--solid);}
+  .ic-pressure{border:2px solid var(--plasma);}
+  .btn{font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;padding:10px 24px;border:none;border-radius:14px;cursor:pointer;transition:all .2s;}
+  .btn:hover{transform:translateY(-2px);filter:brightness(1.15);}
+  .btn-reset{background:var(--plasma);color:#fff;margin-top:10px;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .container-select{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+  .container-select button{font-family:'Nunito',sans-serif;font-weight:700;padding:6px 14px;border:2px solid var(--accent);background:transparent;color:var(--text);border-radius:10px;cursor:pointer;transition:all .2s;font-size:.85rem;}
+  .container-select button.active{background:var(--accent);}
+
+  /* PLASMA LAB */
+  .plasma-wrap{max-width:600px;margin:0 auto;}
+  #plasma-canvas{display:block;width:100%;height:340px;border-radius:16px;background:#030010;border:2px solid #EF4444;}
+  .plasma-types{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:16px auto;max-width:620px;}
+  .plasma-btn{font-family:'Nunito',sans-serif;font-weight:700;padding:8px 16px;border:2px solid transparent;border-radius:12px;cursor:pointer;font-size:.85rem;transition:all .2s;}
+  .plasma-btn:hover{transform:scale(1.05);}
+  .plasma-btn.active{box-shadow:0 0 18px currentColor;transform:scale(1.06);}
+  #plasma-info{max-width:600px;margin:12px auto;background:var(--card);border-radius:14px;padding:16px;font-size:.9rem;line-height:1.7;}
+  .plasma-controls{max-width:600px;margin:12px auto 0;}
+  .plasma-controls label{display:block;font-weight:700;margin-bottom:5px;font-size:.9rem;}
+
+  /* QUIZ */
+  .quiz-home{max-width:600px;margin:0 auto;text-align:center;}
+  .quiz-mode-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;}
+  .quiz-mode-card{background:var(--card);border-radius:20px;padding:24px;border:2px solid var(--accent);cursor:pointer;transition:all .3s;}
+  .quiz-mode-card:hover{transform:translateY(-4px);background:var(--card2);box-shadow:0 10px 30px rgba(124,58,237,.4);}
+  .quiz-mode-card .big-icon{font-size:3rem;margin-bottom:10px;}
+  #quiz-setup{max-width:400px;margin:0 auto;text-align:center;display:none;}
+  .q-count-controls{display:flex;align-items:center;justify-content:center;gap:12px;margin:10px 0;}
+  .q-count-controls button{width:36px;height:36px;border-radius:50%;border:none;background:var(--accent);color:#fff;font-size:1.3rem;cursor:pointer;font-weight:700;}
+  #q-count-display{font-size:2rem;font-weight:900;min-width:60px;text-align:center;}
+  #quiz-area{display:none;max-width:700px;margin:0 auto;}
+  .quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:8px;}
+  .score-badge{background:var(--correct);color:#fff;font-weight:800;padding:6px 16px;border-radius:20px;}
+  .timer-bar{width:100%;height:10px;background:var(--card2);border-radius:5px;margin-bottom:20px;overflow:hidden;}
+  .timer-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--correct),var(--gas));transition:width .1s linear;}
+  .question-card{background:var(--card);border-radius:20px;padding:28px;margin-bottom:20px;}
+  .question-text{font-size:1.15rem;font-weight:700;line-height:1.6;margin-bottom:20px;}
+  .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .option-btn{font-family:'Nunito',sans-serif;font-weight:700;font-size:.95rem;padding:14px;border:2px solid var(--accent);background:var(--card2);color:var(--text);border-radius:14px;cursor:pointer;transition:all .2s;text-align:left;}
+  .option-btn:hover:not(:disabled){background:var(--accent);border-color:var(--accent);}
+  .option-btn.correct{background:var(--correct)!important;border-color:var(--correct)!important;color:#fff!important;}
+  .option-btn.wrong{background:var(--wrong)!important;border-color:var(--wrong)!important;color:#fff!important;}
+  #results-area{display:none;max-width:700px;margin:0 auto;text-align:center;}
+  .results-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:16px 0;}
+  .stat-box{background:var(--card2);border-radius:14px;padding:16px;}
+  .stat-box .num{font-size:2rem;font-weight:900;font-family:'Fredoka One',cursive;}
+  .stat-box.correct .num{color:var(--correct);} .stat-box.wrong .num{color:var(--wrong);} .stat-box.pct .num{color:var(--gas);}
+  .review-list{text-align:left;margin-top:16px;}
+  .review-item{background:var(--card2);border-radius:12px;padding:12px 16px;margin:8px 0;font-size:.88rem;border-left:4px solid;}
+  .review-item.r-correct{border-color:var(--correct);} .review-item.r-wrong{border-color:var(--wrong);}
+
+  .confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:9999;animation:confettiFall 1.2s ease-in forwards;}
+  @keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+  @media(max-width:600px){
+    h1{font-size:1.8rem;}
+    .options-grid,.quiz-mode-cards,.results-grid{grid-template-columns:1fr;}
+    .arrow-wrap{width:50px;} .state-box{width:72px;height:64px;font-size:.8rem;}
+    .diagram-extra{grid-template-columns:1fr;}
+    nav{gap:3px;} nav button{font-size:.75rem;padding:6px 10px;}
+  }
+
+  /* ── TAB SYSTEM ─────────────────────────────────────── */
+  .tab-bar{display:flex;gap:8px;flex-wrap:wrap;margin:0 auto 24px;max-width:820px;justify-content:center;}
+  .tab-btn{font-family:'Nunito',sans-serif;font-weight:700;padding:8px 18px;border:2px solid var(--accent);background:transparent;color:var(--text);border-radius:12px;cursor:pointer;transition:all .2s;font-size:.9rem;}
+  .tab-btn.active,.tab-btn:hover{background:var(--accent);}
+  .tab-pane{display:none;animation:fadeIn .3s ease;}
+  .tab-pane.active{display:block;}
+
+  /* ── PARTICLE DIAGRAMS ──────────────────────────────── */
+  .pd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;max-width:920px;margin:0 auto 28px;}
+  .pd-card{background:var(--card);border-radius:16px;padding:16px;text-align:center;}
+  .pd-canvas{width:100%;height:150px;border-radius:10px;background:#07041a;display:block;}
+  .pd-facts{font-size:.8rem;line-height:1.75;text-align:left;margin-top:10px;}
+
+  /* ── ENERGY ─────────────────────────────────────────── */
+  .ke-pe-info{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:700px;margin:0 auto 20px;}
+  .ke-box{background:var(--card2);border-radius:14px;padding:16px;font-size:.88rem;line-height:1.7;}
+
+  /* ── ENTHALPY ───────────────────────────────────────── */
+  .enth-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;max-width:920px;margin:0 auto 24px;}
+  .enth-card{background:var(--card);border-radius:14px;padding:16px;text-align:center;border:2px solid transparent;transition:transform .2s;}
+  .enth-card:hover{transform:translateY(-3px);}
+  .enth-card.endo{border-color:#F59E0B;} .enth-card.exo{border-color:#10B981;}
+  .formula-box{background:var(--card2);border-radius:16px;padding:22px;max-width:540px;margin:0 auto 20px;text-align:center;}
+  .formula-big{font-family:'Fredoka One',cursive;font-size:2.2rem;color:#FFD700;margin:8px 0;}
+  .formula-vars{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px;}
+  .fv{background:var(--card);border-radius:10px;padding:10px;font-size:.83rem;line-height:1.5;}
+  .fv strong{color:#FFD700;font-size:1.1rem;}
+  .calc-box{background:var(--card2);border-radius:16px;padding:22px;max-width:520px;margin:0 auto;}
+  .calc-row{display:flex;align-items:center;gap:10px;margin:8px 0;flex-wrap:wrap;}
+  .calc-label{font-weight:700;font-size:.88rem;min-width:155px;}
+  .calc-input{font-family:'Nunito',sans-serif;font-weight:700;padding:7px 12px;border:2px solid var(--accent);background:var(--card);color:var(--text);border-radius:10px;width:115px;font-size:.95rem;}
+  .calc-select{font-family:'Nunito',sans-serif;font-weight:700;padding:7px 10px;border:2px solid var(--accent);background:var(--card);color:var(--text);border-radius:10px;font-size:.85rem;flex:1;min-width:200px;}
+  .calc-result{background:var(--card);border-radius:12px;padding:14px 20px;font-weight:800;font-size:1.1rem;color:#FFD700;margin-top:12px;text-align:center;}
+
+  /* ── GRAPHS ─────────────────────────────────────────── */
+  .graph-wrap{max-width:700px;margin:0 auto;}
+  .graph-canvas{display:block;width:100%;height:400px;border-radius:16px;background:#06021a;border:2px solid var(--accent);margin:0 auto;}
+  .graph-controls{margin:14px 0 0;} .graph-controls label{display:block;font-weight:700;margin-bottom:5px;font-size:.9rem;}
+  .graph-info{margin-top:14px;background:var(--card);border-radius:14px;padding:16px;font-size:.9rem;line-height:1.7;}
+  .graph-legend{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;}
+  .leg-item{display:flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;}
+  .leg-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+  .play-row{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
+
+  /* ── ENTHALPY LAB ────────────────────────────────────── */
+  .enth-sel-btn{transition:opacity .2s,border-color .2s;}
+  .enth-sel-btn:hover{opacity:1!important;}
+
+  @media(max-width:700px){
+    section > div[style*="grid-template-columns:1fr 380px"],
+    div[style*="grid-template-columns:1fr 340px"]{
+      grid-template-columns:1fr!important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">⚗️ Matter Mania</div>
+  <button class="nav-learn"     onclick="showSection('learn')">📚 Learn</button>
+  <button class="nav-lab"       onclick="showSection('lab')">🔬 Heat Lab</button>
+  <button class="nav-plasma-btn"onclick="showSection('plasma')">⚡ Plasma Lab</button>
+  <button class="nav-quiz"      onclick="showSection('quiz');initQuizHome()">🎮 Quiz Hub</button>
+  <button style="background:#EC4899;color:#fff;" onclick="showSection('theory');initTheory()">📐 Theory</button>
+  <button style="background:#10B981;color:#fff;" onclick="showSection('graphs');initGraphs()">📊 Graphs</button>
+  <button style="background:#FF6600;color:#fff;" onclick="showSection('enthalpy-lab');initEnthalpyLab()">⚗️ Enthalpy Lab</button>
+</nav>
+
+<!-- ═══════════════════ SECTION 1: LEARN ═══════════════════ -->
+<section id="learn" class="active">
+  <div class="section-title">
+    <h1>States of Matter</h1>
+    <p class="subtitle">Explore the 4 states, how particles behave, and why matter changes state!</p>
+  </div>
+
+  <div class="cards-grid">
+    <!-- SOLID -->
+    <div class="state-card solid">
+      <div class="icon">🧊</div><div class="badge">SOLID</div>
+      <ul class="prop-list">
+        <li>Fixed shape &amp; fixed volume</li>
+        <li>Very low compressibility</li>
+        <li>Particles vibrate in fixed positions</li>
+        <li>Lowest energy state</li>
+        <li>Strong intermolecular forces</li>
+      </ul>
+      <div class="examples-row">
+        <span class="example-tag">🧊 Ice</span><span class="example-tag">🪨 Rock</span>
+        <span class="example-tag">🥄 Metal spoon</span><span class="example-tag">🧱 Brick</span>
+      </div>
+      <!-- Distance & Force info -->
+      <div style="margin-top:12px;padding:10px;background:rgba(59,130,246,0.1);border-radius:10px;border-left:3px solid var(--solid);font-size:.82rem;line-height:1.7;">
+        <div>📏 <strong>Particle distance:</strong> ~0.3 nm — particles are packed very closely together in a regular lattice. Almost no space between them!</div>
+        <div>💪 <strong>Force strength:</strong> Very strong intermolecular forces hold particles tightly in fixed positions. Hard to compress.</div>
+      </div>
+      <!-- KE / PE info -->
+      <div style="margin-top:8px;padding:10px;background:rgba(59,130,246,0.07);border-radius:10px;font-size:.82rem;line-height:1.7;">
+        <div>🔥 <strong>Kinetic Energy (KE):</strong> <span style="color:#F59E0B">LOWEST</span> — particles only vibrate, no movement through space.</div>
+        <div>🔗 <strong>Potential Energy (PE):</strong> <span style="color:#7C3AED">HIGHEST</span> — maximum energy stored in the strong bonds between particles.</div>
+      </div>
+      <canvas class="particle-demo" id="pdemo-solid"></canvas>
+    </div>
+    <!-- LIQUID -->
+    <div class="state-card liquid">
+      <div class="icon">💧</div><div class="badge">LIQUID</div>
+      <ul class="prop-list">
+        <li>Takes shape of container</li>
+        <li>Fixed volume</li>
+        <li>Low compressibility</li>
+        <li>Particles slide past each other</li>
+        <li>More energy than solids</li>
+      </ul>
+      <div class="examples-row">
+        <span class="example-tag">💧 Water</span><span class="example-tag">🛢️ Oil</span>
+        <span class="example-tag">🧃 Juice</span><span class="example-tag">⚗️ Mercury</span>
+      </div>
+      <div style="margin-top:12px;padding:10px;background:rgba(6,182,212,0.1);border-radius:10px;border-left:3px solid var(--liquid);font-size:.82rem;line-height:1.7;">
+        <div>📏 <strong>Particle distance:</strong> ~0.3–0.4 nm — still very close together, similar to solids. Particles touch but can move around each other.</div>
+        <div>💪 <strong>Force strength:</strong> Moderate forces — strong enough to keep a fixed volume but weak enough to allow flow and change shape.</div>
+      </div>
+      <div style="margin-top:8px;padding:10px;background:rgba(6,182,212,0.07);border-radius:10px;font-size:.82rem;line-height:1.7;">
+        <div>🔥 <strong>Kinetic Energy (KE):</strong> <span style="color:#F59E0B">MEDIUM</span> — particles slide and flow past each other, more motion than solid.</div>
+        <div>🔗 <strong>Potential Energy (PE):</strong> <span style="color:#7C3AED">MEDIUM</span> — some bonds broken compared to solid (absorbed latent heat of fusion).</div>
+      </div>
+      <canvas class="particle-demo" id="pdemo-liquid"></canvas>
+    </div>
+    <!-- GAS -->
+    <div class="state-card gas">
+      <div class="icon">💨</div><div class="badge">GAS</div>
+      <ul class="prop-list">
+        <li>No fixed shape or volume</li>
+        <li>Highly compressible</li>
+        <li>Particles move rapidly &amp; randomly</li>
+        <li>High energy state</li>
+        <li>Fills any container</li>
+      </ul>
+      <div class="examples-row">
+        <span class="example-tag">🌬️ Air</span><span class="example-tag">♨️ Steam</span>
+        <span class="example-tag">O₂ Oxygen</span><span class="example-tag">CO₂</span>
+      </div>
+      <div style="margin-top:12px;padding:10px;background:rgba(245,158,11,0.1);border-radius:10px;border-left:3px solid var(--gas);font-size:.82rem;line-height:1.7;">
+        <div>📏 <strong>Particle distance:</strong> ~3–10 nm — particles are far apart, roughly 10× the distance of solids. Huge empty spaces between particles!</div>
+        <div>💪 <strong>Force strength:</strong> Negligible — almost zero attractive force. Particles move independently and are easy to compress.</div>
+      </div>
+      <div style="margin-top:8px;padding:10px;background:rgba(245,158,11,0.07);border-radius:10px;font-size:.82rem;line-height:1.7;">
+        <div>🔥 <strong>Kinetic Energy (KE):</strong> <span style="color:#F59E0B">HIGHEST (of common states)</span> — particles zip around rapidly in all directions.</div>
+        <div>🔗 <strong>Potential Energy (PE):</strong> <span style="color:#7C3AED">LOW</span> — nearly all bonds broken. Most stored PE was converted to KE during boiling.</div>
+      </div>
+      <canvas class="particle-demo" id="pdemo-gas"></canvas>
+    </div>
+    <!-- PLASMA -->
+    <div class="state-card plasma">
+      <div class="icon">⚡</div><div class="badge">PLASMA</div>
+      <ul class="prop-list">
+        <li>Super high energy – highest of all!</li>
+        <li>Ionised gas – electrons stripped off</li>
+        <li>Conducts electricity</li>
+        <li>Found naturally &amp; artificially</li>
+        <li>Most common state in the universe!</li>
+      </ul>
+      <div class="examples-row">
+        <span class="example-tag">☀️ Sun</span><span class="example-tag">⚡ Lightning</span>
+        <span class="example-tag">🌌 Aurora</span><span class="example-tag">💡 Fluorescent</span>
+        <span class="example-tag">🔮 Plasma ball</span>
+      </div>
+      <div style="margin-top:12px;padding:10px;background:rgba(239,68,68,0.1);border-radius:10px;border-left:3px solid var(--plasma);font-size:.82rem;line-height:1.7;">
+        <div>📏 <strong>Particle distance:</strong> Very large — free ions and electrons are spread widely. No fixed structure at all.</div>
+        <div>💪 <strong>Force strength:</strong> Electromagnetic — positive ions attract free electrons across large distances. Different to normal intermolecular forces!</div>
+      </div>
+      <div style="margin-top:8px;padding:10px;background:rgba(239,68,68,0.07);border-radius:10px;font-size:.82rem;line-height:1.7;">
+        <div>🔥 <strong>Kinetic Energy (KE):</strong> <span style="color:#F59E0B">EXTREME</span> — particles move at millions of m/s. Temperatures can exceed millions of °C.</div>
+        <div>🔗 <strong>Potential Energy (PE):</strong> <span style="color:#7C3AED">EXTREME</span> — electrons are fully stripped from atoms, storing enormous electromagnetic PE.</div>
+      </div>
+      <canvas class="particle-demo" id="pdemo-plasma"></canvas>
+    </div>
+  </div>
+
+  <!-- Energy Comparison -->
+  <div class="energy-compare">
+    <h2>⚡ Energy Comparison</h2>
+    <div class="energy-bar-row"><div class="energy-label">🧊 Solid</div><div class="energy-bar eb-solid">Low</div></div>
+    <div class="energy-bar-row"><div class="energy-label">💧 Liquid</div><div class="energy-bar eb-liquid">Medium</div></div>
+    <div class="energy-bar-row"><div class="energy-label">💨 Gas</div><div class="energy-bar eb-gas">High</div></div>
+    <div class="energy-bar-row"><div class="energy-label">⚡ Plasma</div><div class="energy-bar eb-plasma">Extreme!</div></div>
+  </div>
+
+  <!-- State Change Diagram -->
+  <div class="diagram-section">
+    <h2>🔄 State Change Diagram</h2>
+    <div class="diagram-wrap">
+      <div class="state-box sb-solid">🧊<br>SOLID</div>
+      <div class="arrow-wrap">
+        <div class="arrow-label">Melting ↑<br>Freezing ↓</div>
+        <div class="arrow-line">⇄</div>
+      </div>
+      <div class="state-box sb-liquid">💧<br>LIQUID</div>
+      <div class="arrow-wrap">
+        <div class="arrow-label">Boiling ↑<br>Condensing ↓</div>
+        <div class="arrow-line">⇄</div>
+      </div>
+      <div class="state-box sb-gas">💨<br>GAS</div>
+      <div class="arrow-wrap">
+        <div class="arrow-label">Ionisation ↑</div>
+        <div class="arrow-line">→</div>
+      </div>
+      <div class="state-box sb-plasma">⚡<br>PLASMA</div>
+    </div>
+    <p style="text-align:center;margin-top:8px;color:var(--muted);font-size:.85rem;">
+      🔵 Solid → Gas = <strong style="color:#FFD700">Sublimation</strong> &nbsp;|&nbsp; 💨 Gas → Solid = <strong style="color:#FFD700">Deposition</strong>
+    </p>
+    <div class="diagram-extra">
+      <div class="info-box"><strong>🌡️ Water State Changes</strong><br>Melting &amp; Freezing: <strong>0°C</strong><br>Boiling &amp; Condensation: <strong>100°C</strong><br><br><em>Same temp because the process is reversible!</em></div>
+      <div class="info-box"><strong>🔥 Why temperature STOPS during state change?</strong><br>Energy breaks <strong>intermolecular forces</strong> instead of heating. This hidden energy = <strong>Latent Heat</strong>. Temp only rises again after bonds break!</div>
+      <div class="info-box"><strong>⬆️ Speed Up State Changes</strong><br>• Increase temperature<br>• Increase surface area<br>• Increase airflow<br>• Reduce pressure (for boiling)<br>• Stirring the liquid</div>
+      <div class="info-box"><strong>🧪 Compress Gas but NOT Liquid?</strong><br>Gas = <strong>huge gaps</strong> → easy to squash.<br>Liquid = particles <strong>already touching</strong> → nearly impossible.<br><br><em>Smaller container → higher gas pressure (Boyle's Law)</em></div>
+    </div>
+  </div>
+
+  <!-- ── HEATING CURVE DIAGRAM (static, educational) ── -->
+  <div class="diagram-section" style="max-width:900px;">
+    <h2>🌡️ Temperature–Time Heating Curve</h2>
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:16px;">What happens to temperature as you heat water continuously from −20°C (solid ice) all the way to steam above 100°C?</p>
+    <canvas id="learn-heating-curve" style="display:block;width:100%;height:320px;border-radius:14px;background:#06021a;"></canvas>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:18px;">
+      <div class="info-box" style="border-left:4px solid #3B82F6;">
+        <strong style="color:#3B82F6">① Solid Heating</strong><br>
+        KE rises → temperature increases. Particles vibrate faster but stay locked in fixed lattice positions.
+      </div>
+      <div class="info-box" style="border-left:4px solid #FFD700;">
+        <strong style="color:#FFD700">② Melting Plateau (0°C)</strong><br>
+        Temperature stays flat! Energy goes into <strong>Latent Heat of Fusion</strong> to break bonds. KE constant, PE rises.
+      </div>
+      <div class="info-box" style="border-left:4px solid #06B6D4;">
+        <strong style="color:#06B6D4">③ Liquid Heating</strong><br>
+        KE rises again → temperature increases. Particles slide past each other with increasing speed.
+      </div>
+      <div class="info-box" style="border-left:4px solid #FFD700;">
+        <strong style="color:#FFD700">④ Boiling Plateau (100°C)</strong><br>
+        Temperature stays flat again! Energy = <strong>Latent Heat of Vaporisation</strong>. This plateau is much longer than melting.
+      </div>
+      <div class="info-box" style="border-left:4px solid #F59E0B;">
+        <strong style="color:#F59E0B">⑤ Gas Heating</strong><br>
+        KE rises rapidly → temperature increases fast. Particles now move freely with almost no intermolecular forces.
+      </div>
+      <div class="info-box" style="border-left:4px solid #7C3AED;">
+        <strong style="color:#7C3AED">💡 The Golden Rule</strong><br>
+        <strong>Flat section = state change</strong> → PE rising, KE constant, temp stays fixed.<br>
+        <strong>Slope section = heating</strong> → KE rising, PE constant, temp increases.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 2: HEAT LAB ═══════════════════ -->
+<section id="lab">
+  <div class="section-title">
+    <h1>🔬 Heat Experiment Lab</h1>
+    <p class="subtitle">Heat the particles — watch them change state and fill the container!</p>
+  </div>
+
+  <div class="lab-wrap">
+    <div style="max-width:980px;margin:0 auto;">
+      <!-- Top row: Reset button -->
+      <div style="display:flex;justify-content:flex-end;max-width:980px;margin:0 auto 10px;">
+        <button class="btn btn-reset" onclick="resetLab()" style="margin-top:0;">🔄 Reset to Solid</button>
+      </div>
+      <!-- Main layout: particle sim + mini PV graph side by side -->
+      <div style="display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;">
+        <div>
+          <canvas id="lab-canvas" width="560" height="380" style="display:block;width:100%;height:380px;border-radius:16px;background:#070418;border:2px solid var(--accent);"></canvas>
+        </div>
+        <!-- Mini PV graph panel -->
+        <div style="background:var(--card);border-radius:16px;padding:16px;border:2px solid rgba(124,58,237,0.4);">
+          <h3 style="font-size:1rem;margin-bottom:8px;text-align:center;">📐 Pressure–Volume</h3>
+          <canvas id="lab-pv-mini" width="280" height="200" style="display:block;width:100%;height:200px;border-radius:10px;background:#06021a;border:1px solid rgba(124,58,237,0.3);"></canvas>
+          <div style="margin-top:10px;font-size:.8rem;line-height:1.65;">
+            <div id="lab-pv-state" style="font-weight:800;font-size:.9rem;margin-bottom:6px;text-align:center;">🧊 SOLID</div>
+            <div id="lab-pv-info" style="color:var(--muted);">The particle container is a fixed solid lattice — no pressure to measure.</div>
+          </div>
+          <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.78rem;">
+            <div style="background:var(--card2);border-radius:8px;padding:7px;text-align:center;">
+              <div style="color:var(--muted);">Pressure</div>
+              <div id="lab-mini-pressure" style="font-weight:800;color:#F59E0B;">—</div>
+            </div>
+            <div style="background:var(--card2);border-radius:8px;padding:7px;text-align:center;">
+              <div style="color:var(--muted);">Volume</div>
+              <div id="lab-mini-volume" style="font-weight:800;color:#06B6D4;">—</div>
+            </div>
+            <div style="background:var(--card2);border-radius:8px;padding:7px;text-align:center;">
+              <div style="color:var(--muted);">Temp</div>
+              <div id="lab-mini-temp" style="font-weight:800;color:#EF4444;">0°C</div>
+            </div>
+            <div style="background:var(--card2);border-radius:8px;padding:7px;text-align:center;">
+              <div style="color:var(--muted);">PV = k</div>
+              <div id="lab-mini-pv" style="font-weight:800;color:#FFD700;">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Controls below -->
+      <div class="lab-controls" style="max-width:980px;margin-top:14px;">
+      <label>🔥 Flame / Temperature: <span id="flame-val">0</span>% &nbsp; → &nbsp; <span id="temp-display" style="color:var(--gas);font-weight:900;">0°C</span></label>
+      <input type="range" id="flame-slider" min="0" max="100" value="0" oninput="updateFlame(this.value)">
+
+      <label style="margin-top:10px;">📦 Container Size: <span id="container-size-val">100</span>%</label>
+      <input type="range" id="container-size-slider" min="40" max="100" value="100" oninput="updateContainerSize(this.value)">
+
+      <div class="lab-info">
+        <div class="info-chip ic-state" id="state-display">🧊 SOLID</div>
+        <div class="info-chip ic-pressure" id="pressure-display">💨 Pressure: Normal</div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <label>📐 Container Shape:</label>
+        <div class="container-select">
+          <button class="active" onclick="setContainer('square',this)">⬛ Square</button>
+          <button onclick="setContainer('tall',this)">📏 Tall Beaker</button>
+          <button onclick="setContainer('wide',this)">🫙 Wide Bowl</button>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 3: PLASMA LAB ═══════════════════ -->
+<section id="plasma">
+  <div class="section-title">
+    <h1>⚡ Plasma Lab</h1>
+    <p class="subtitle">The 4th state of matter — the most energetic in the universe!</p>
+  </div>
+
+  <div class="plasma-types">
+    <button class="plasma-btn active" style="background:#00AA55;color:#fff;border-color:#00AA55" onclick="selectPlasma('aurora',this)">🌌 Aurora</button>
+    <button class="plasma-btn" style="background:#FFD700;color:#1a1a1a;border-color:#FFD700" onclick="selectPlasma('lightning',this)">⚡ Lightning</button>
+    <button class="plasma-btn" style="background:#8B5CF6;color:#fff;border-color:#8B5CF6" onclick="selectPlasma('fluorescent',this)">💡 Fluorescent</button>
+    <button class="plasma-btn" style="background:#EF4444;color:#fff;border-color:#EF4444" onclick="selectPlasma('solar',this)">☀️ Solar Wind</button>
+    <button class="plasma-btn" style="background:#06B6D4;color:#0a0a0a;border-color:#06B6D4" onclick="selectPlasma('fusion',this)">🔵 Nuclear Fusion</button>
+    <button class="plasma-btn" style="background:#EC4899;color:#fff;border-color:#EC4899" onclick="selectPlasma('ball',this)">🔮 Plasma Ball</button>
+  </div>
+
+  <div class="plasma-wrap">
+    <canvas id="plasma-canvas" width="560" height="340"></canvas>
+    <div id="plasma-info" style="margin-top:12px;">
+      <strong>🌌 Aurora (Northern Lights)</strong><br>
+      Charged particles from the Sun collide with gas atoms in Earth's atmosphere. Each collision strips electrons from atoms, creating ionised plasma that glows in brilliant curtains of colour.
+      <br>🌡️ Temperature: <strong>~1,000–5,000°C</strong>
+    </div>
+    <div class="plasma-controls">
+      <label>⚡ Energy Input: <span id="energy-val">50</span>%</label>
+      <input type="range" id="energy-slider" min="5" max="100" value="50" oninput="updatePlasmaEnergy(this.value)">
+      <label style="margin-top:10px;display:block;">🧲 Magnetic Field: <span id="mag-val">30</span>%</label>
+      <input type="range" id="mag-slider" min="0" max="100" value="30" oninput="updateMag(this.value)">
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 4: QUIZ ═══════════════════ -->
+<section id="quiz">
+  <div class="section-title">
+    <h1>🎮 Quiz Hub</h1>
+    <p class="subtitle">Test your knowledge — Kahoot style!</p>
+  </div>
+
+  <div id="quiz-home-area" class="quiz-home">
+    <div class="quiz-mode-cards">
+      <div class="quiz-mode-card" onclick="startInfiniteQuiz()">
+        <div class="big-icon">♾️</div>
+        <h3>Infinite Mode</h3>
+        <p style="font-size:.85rem;color:var(--muted)">Unlimited questions! Stop whenever you like.</p>
+      </div>
+      <div class="quiz-mode-card" onclick="showCustomSetup()">
+        <div class="big-icon">🎯</div>
+        <h3>Custom Quiz</h3>
+        <p style="font-size:.85rem;color:var(--muted)">Pick 1–50 questions and get a full report!</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="quiz-setup">
+    <h2>🎯 Custom Quiz</h2>
+    <p style="color:var(--muted);margin-bottom:16px">How many questions?</p>
+    <div class="q-count-controls">
+      <button onclick="changeQCount(-5)">−</button>
+      <div id="q-count-display">10</div>
+      <button onclick="changeQCount(5)">+</button>
+    </div>
+    <input type="range" id="q-count-slider" min="1" max="50" value="10" oninput="syncQCount(this.value)" style="margin:10px 0;">
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px">1 – 50 questions</p>
+    <button class="btn btn-primary" onclick="startCustomQuiz()" style="font-size:1.1rem;padding:12px 32px">🚀 GO!</button>
+    <br><br>
+    <button class="btn" style="background:var(--card2);color:var(--muted)" onclick="initQuizHome()">← Back</button>
+  </div>
+
+  <div id="quiz-area">
+    <div class="quiz-header">
+      <div style="font-weight:700">Q <span id="q-num">1</span><span id="q-total-label"></span></div>
+      <div class="score-badge">⭐ <span id="live-score">0</span></div>
+      <button class="btn" style="background:var(--plasma);color:#fff;font-size:.85rem;padding:6px 14px" onclick="stopQuiz()">⏹ Stop</button>
+    </div>
+    <div class="timer-bar"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+    <div class="question-card">
+      <div class="question-text" id="question-text"></div>
+      <div class="options-grid" id="options-grid"></div>
+    </div>
+  </div>
+
+  <div id="results-area">
+    <h2>🏆 Results!</h2>
+    <div class="results-grid">
+      <div class="stat-box correct"><div class="num" id="res-correct">0</div><div>Correct ✅</div></div>
+      <div class="stat-box wrong"><div class="num" id="res-wrong">0</div><div>Wrong ❌</div></div>
+      <div class="stat-box pct"><div class="num" id="res-pct">0%</div><div>Score 🌟</div></div>
+    </div>
+    <div class="review-list" id="review-list"></div>
+    <br>
+    <button class="btn btn-primary" onclick="initQuizHome()">🏠 Quiz Hub</button>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 5: THEORY ═══════════════════ -->
+<section id="theory">
+  <div class="section-title">
+    <h1>📐 Theory Hub</h1>
+    <p class="subtitle">Particle diagrams, energy types, enthalpy, and latent heat — all in one place!</p>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTheoryTab('particles',this)">🔬 Particle Diagrams</button>
+    <button class="tab-btn" onclick="switchTheoryTab('energy',this)">⚡ KE vs PE</button>
+    <button class="tab-btn" onclick="switchTheoryTab('enthalpy',this)">🔥 Heat &amp; Enthalpy</button>
+  </div>
+
+  <!-- ── TAB 1: PARTICLE DIAGRAMS ── -->
+  <div class="tab-pane active" id="theory-particles">
+    <p class="subtitle" style="margin-bottom:18px">Live particle diagrams labelled with intermolecular distance and force strength</p>
+    <div class="pd-grid">
+      <div class="pd-card" style="border:2px solid var(--solid)">
+        <h3 style="color:var(--solid)">🧊 Solid</h3>
+        <canvas class="pd-canvas" id="pd-solid"></canvas>
+        <div class="pd-facts">
+          <div>📏 <strong>Distance:</strong> ~0.3 nm — very close, touching</div>
+          <div>💪 <strong>Forces:</strong> Very strong attractive bonds</div>
+          <div>🔄 <strong>Arrangement:</strong> Regular crystalline lattice</div>
+          <div>⚡ <strong>Motion:</strong> Vibrate only — no translation</div>
+        </div>
+      </div>
+      <div class="pd-card" style="border:2px solid var(--liquid)">
+        <h3 style="color:var(--liquid)">💧 Liquid</h3>
+        <canvas class="pd-canvas" id="pd-liquid"></canvas>
+        <div class="pd-facts">
+          <div>📏 <strong>Distance:</strong> ~0.3–0.4 nm — still close</div>
+          <div>💪 <strong>Forces:</strong> Moderate — can break &amp; reform</div>
+          <div>🔄 <strong>Arrangement:</strong> Random, no fixed positions</div>
+          <div>⚡ <strong>Motion:</strong> Slide past each other freely</div>
+        </div>
+      </div>
+      <div class="pd-card" style="border:2px solid var(--gas)">
+        <h3 style="color:var(--gas)">💨 Gas</h3>
+        <canvas class="pd-canvas" id="pd-gas"></canvas>
+        <div class="pd-facts">
+          <div>📏 <strong>Distance:</strong> ~3–10 nm — very far apart</div>
+          <div>💪 <strong>Forces:</strong> Negligible — almost zero</div>
+          <div>🔄 <strong>Arrangement:</strong> Completely random, fill space</div>
+          <div>⚡ <strong>Motion:</strong> Rapid random motion in all directions</div>
+        </div>
+      </div>
+      <div class="pd-card" style="border:2px solid var(--plasma)">
+        <h3 style="color:var(--plasma)">⚡ Plasma</h3>
+        <canvas class="pd-canvas" id="pd-plasma"></canvas>
+        <div class="pd-facts">
+          <div>📏 <strong>Distance:</strong> Very large (ionised gas)</div>
+          <div>💪 <strong>Forces:</strong> Electromagnetic — ions attract electrons</div>
+          <div>🔄 <strong>Arrangement:</strong> Free positive ions + free electrons</div>
+          <div>⚡ <strong>Motion:</strong> Extreme — millions of degrees</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Force vs Distance graph -->
+    <div class="diagram-section" style="max-width:720px">
+      <h2>⚡ Intermolecular Force vs Distance</h2>
+      <canvas id="force-graph" style="width:100%;height:210px;border-radius:12px;background:#07041a;display:block;"></canvas>
+      <div class="diagram-extra" style="margin-top:14px;">
+        <div class="info-box"><strong style="color:#EF4444">🔴 Repulsion (very close)</strong><br>When particles are squeezed together, electron clouds overlap and <strong>push back</strong> with a very strong force — this is why solids and liquids are almost incompressible.</div>
+        <div class="info-box"><strong style="color:#3B82F6">🔵 Attraction (medium range)</strong><br>Van der Waals &amp; intermolecular attractions pull particles together. This force is <strong>strongest in solids, weakest in gas</strong> and zero at the equilibrium separation distance.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB 2: KE vs PE ── -->
+  <div class="tab-pane" id="theory-energy">
+    <div class="ke-pe-info">
+      <div class="ke-box"><strong style="color:#F59E0B">🔥 Kinetic Energy (KE)</strong><br>Energy of <em>movement</em>. As temperature rises, particles move faster → KE increases.<br><br><strong>KE ∝ Temperature</strong><br>More KE = higher temperature.</div>
+      <div class="ke-box"><strong style="color:#7C3AED">🔗 Potential Energy (PE)</strong><br>Energy stored in <em>bonds between particles</em>. Increases when bonds break during a state change — this is <strong>Latent Heat</strong>!<br><br><strong>PE increases at melting &amp; boiling points.</strong></div>
+    </div>
+    <canvas id="ke-pe-canvas" style="display:block;width:100%;height:320px;border-radius:16px;background:#06021a;border:2px solid var(--accent);max-width:720px;margin:0 auto;"></canvas>
+    <div class="graph-legend" style="justify-content:center;margin-top:10px;">
+      <div class="leg-item"><div class="leg-dot" style="background:#F59E0B"></div>Kinetic Energy (KE) — temperature</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#7C3AED"></div>Potential Energy (PE) — bond energy</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#FFD700"></div>Latent heat plateau</div>
+    </div>
+    <div class="graph-info" style="max-width:720px;margin:12px auto 0;">
+      <strong>💡 The Golden Rule:</strong><br>
+      🌡️ <strong>Temperature change:</strong> KE increases → particles speed up → temperature rises.<br>
+      ❄️ <strong>State change (plateau):</strong> KE stays <em>constant</em> → PE increases → bonds break → temperature stays flat.<br>
+      📊 This is exactly why the heating curve has <strong>flat sections</strong> at 0°C and 100°C!
+    </div>
+  </div>
+
+  <!-- ── TAB 3: ENTHALPY ── -->
+  <div class="tab-pane" id="theory-enthalpy">
+    <div class="graph-info" style="max-width:720px;margin:0 auto 20px;">
+      <strong>🔥 What is Enthalpy Change (ΔH)?</strong><br>
+      ΔH measures heat energy transferred during a process at constant pressure.<br>
+      <strong style="color:#F59E0B">ΔH &gt; 0 (positive) = Endothermic</strong> — energy absorbed from surroundings (feels cold).<br>
+      <strong style="color:#10B981">ΔH &lt; 0 (negative) = Exothermic</strong> — energy released to surroundings (feels warm).
+    </div>
+    <div class="enth-grid">
+      <div class="enth-card endo"><div style="font-size:2rem">🧊→💧</div><strong>Melting</strong><br><span style="color:#F59E0B">ΔH = +6.01 kJ/mol</span><br><small style="color:var(--muted)">Endothermic — absorbs energy to break solid bonds</small></div>
+      <div class="enth-card exo"><div style="font-size:2rem">💧→🧊</div><strong>Freezing</strong><br><span style="color:#10B981">ΔH = −6.01 kJ/mol</span><br><small style="color:var(--muted)">Exothermic — releases energy as bonds form</small></div>
+      <div class="enth-card endo"><div style="font-size:2rem">💧→💨</div><strong>Vaporisation</strong><br><span style="color:#F59E0B">ΔH = +40.7 kJ/mol</span><br><small style="color:var(--muted)">Endothermic — absorbs energy to break liquid bonds</small></div>
+      <div class="enth-card exo"><div style="font-size:2rem">💨→💧</div><strong>Condensation</strong><br><span style="color:#10B981">ΔH = −40.7 kJ/mol</span><br><small style="color:var(--muted)">Exothermic — releases energy as bonds reform</small></div>
+      <div class="enth-card endo"><div style="font-size:2rem">🧊→💨</div><strong>Sublimation</strong><br><span style="color:#F59E0B">ΔH = +46.7 kJ/mol</span><br><small style="color:var(--muted)">Endothermic — solid to gas, skipping liquid</small></div>
+      <div class="enth-card exo"><div style="font-size:2rem">💨→🧊</div><strong>Deposition</strong><br><span style="color:#10B981">ΔH = −46.7 kJ/mol</span><br><small style="color:var(--muted)">Exothermic — gas directly to solid</small></div>
+    </div>
+
+    <div class="formula-box">
+      <h2>⚗️ Specific Latent Heat Formula</h2>
+      <div class="formula-big">Q = m × L</div>
+      <div class="formula-vars">
+        <div class="fv"><strong>Q</strong><br>Heat energy<br>(Joules, J)</div>
+        <div class="fv"><strong>m</strong><br>Mass<br>(kg)</div>
+        <div class="fv"><strong>L</strong><br>Specific latent heat<br>(J / kg)</div>
+      </div>
+      <p style="color:var(--muted);font-size:.82rem;margin-top:10px;">Water: L<sub>fusion</sub> = 334,000 J/kg &nbsp;|&nbsp; L<sub>vaporisation</sub> = 2,260,000 J/kg</p>
+    </div>
+
+    <div class="calc-box">
+      <h3 style="text-align:center;margin-bottom:14px;">🧮 Latent Heat Calculator</h3>
+      <div class="calc-row">
+        <div class="calc-label">⚗️ State change:</div>
+        <select id="lh-type" class="calc-select" onchange="calcLatentHeat()">
+          <option value="334000">💧 Melting ice (L = 334,000 J/kg)</option>
+          <option value="2260000">♨️ Boiling water (L = 2,260,000 J/kg)</option>
+          <option value="2838000">🧊 Sublimation of ice (L = 2,838,000 J/kg)</option>
+        </select>
+      </div>
+      <div class="calc-row">
+        <div class="calc-label">⚖️ Mass (kg):</div>
+        <input class="calc-input" id="lh-mass" type="number" value="1" min="0.001" step="0.1" oninput="calcLatentHeat()">
+      </div>
+      <div class="calc-result" id="lh-result">Q = 334,000 J = 334.0 kJ</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 6: GRAPHS ═══════════════════ -->
+<section id="graphs">
+  <div class="section-title">
+    <h1>📊 Graphs</h1>
+    <p class="subtitle">Interactive graphs — drag and animate to explore pressure, volume, temperature and time!</p>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchGraphTab('heating',this)">🌡️ Heating Curve</button>
+    <button class="tab-btn" onclick="switchGraphTab('pv',this)">📐 Pressure–Volume</button>
+  </div>
+
+  <!-- ── HEATING CURVE TAB ── -->
+  <div class="tab-pane active" id="graph-heating">
+    <div class="graph-wrap">
+      <canvas id="heating-canvas" class="graph-canvas" style="height:430px;"></canvas>
+      <div class="graph-controls">
+        <label>⏩ Heat Added: <span id="heat-pval">0</span>%</label>
+        <input type="range" id="heat-slider" min="0" max="100" value="0" step="0.2" oninput="scrubHeat(this.value)">
+        <div class="play-row">
+          <button class="btn btn-primary" id="heat-play-btn" onclick="toggleHeatPlay()" style="font-size:.9rem;padding:8px 20px;">▶ Animate</button>
+          <button class="btn btn-reset" onclick="resetHeat()" style="font-size:.9rem;padding:8px 18px;margin-top:0">↺ Reset</button>
+        </div>
+      </div>
+      <div class="graph-info" id="heat-info">Move the slider or press <strong>Animate</strong> to explore the heating curve!</div>
+    </div>
+  </div>
+
+  <!-- ── PV GRAPH TAB ── -->
+  <div class="tab-pane" id="graph-pv">
+    <div class="graph-wrap" style="max-width:800px;">
+      <canvas id="pv-canvas" class="graph-canvas"></canvas>
+      <div class="graph-controls">
+        <label>🌡️ Temperature: <span id="pv-tval">300</span> K &nbsp;<span style="color:var(--muted);font-size:.8rem;">(move slider or hover graph)</span></label>
+        <input type="range" id="pv-tslider" min="100" max="700" value="300" oninput="setPVTemp(this.value)">
+        <div class="graph-info" id="pv-readout" style="margin-top:12px;">Hover over the graph to read P and V values. Use the slider to change temperature (isotherm).</div>
+      </div>
+
+      <!-- How it works explanation -->
+      <div style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+
+        <div class="graph-info" style="margin-top:0;border-left:4px solid #06B6D4;">
+          <strong style="color:#06B6D4;">📐 Boyle's Law — What is it?</strong><br>
+          At <strong>constant temperature</strong>, pressure and volume are inversely proportional:<br>
+          <span style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#FFD700;">P × V = k</span><br>
+          <span style="color:var(--muted);font-size:.83rem;">where k is a constant. Each coloured curve on the graph is one isotherm (one temperature).</span>
+        </div>
+
+        <div class="graph-info" style="margin-top:0;border-left:4px solid #F59E0B;">
+          <strong style="color:#F59E0B;">📦 What does Volume affect?</strong><br>
+          <strong>Decrease V</strong> → particles hit the walls more often → <strong>P increases</strong><br>
+          <strong>Increase V</strong> → particles spread out → <strong>P decreases</strong><br>
+          <span style="color:var(--muted);font-size:.83rem;">This is why pumping a tyre (smaller volume) increases pressure.</span>
+        </div>
+
+        <div class="graph-info" style="margin-top:0;border-left:4px solid #EF4444;">
+          <strong style="color:#EF4444;">🌡️ What does Temperature affect?</strong><br>
+          <strong>Higher T</strong> → particles move faster → hit walls harder & more often → higher pressure at every volume.<br>
+          <span style="color:var(--muted);font-size:.83rem;">Move the slider up — the dot shifts to a <em>higher isotherm curve</em>.</span>
+        </div>
+
+        <div class="graph-info" style="margin-top:0;border-left:4px solid #7C3AED;">
+          <strong style="color:#7C3AED;">🔢 Reading the graph</strong><br>
+          Each hyperbolic curve = one temperature. <strong>Higher curves = hotter gas.</strong><br>
+          Hover anywhere on the graph — the probe shows <strong>P, V, and PV = k</strong> values live.<br>
+          <span style="color:var(--muted);font-size:.83rem;">Notice PV stays nearly constant along each curve.</span>
+        </div>
+
+        <div class="graph-info" style="margin-top:0;border-left:4px solid #10B981;">
+          <strong style="color:#10B981;">🧪 Real-world examples</strong><br>
+          • <strong>Syringe:</strong> push plunger in (↓V) → pressure rises → gas resists<br>
+          • <strong>Scuba tank:</strong> small volume, very high pressure stores lots of gas<br>
+          • <strong>Balloon at altitude:</strong> lower external pressure → balloon expands (↑V, ↓P)
+        </div>
+
+        <div class="graph-info" style="margin-top:0;border-left:4px solid #FFD700;">
+          <strong style="color:#FFD700;">⚠️ Assumptions</strong><br>
+          Boyle's Law applies to an <strong>ideal gas</strong> — where particles have no volume and no forces between them. Real gases deviate at:<br>
+          <span style="color:var(--muted);font-size:.83rem;">• Very high pressures (particles too close)<br>• Very low temperatures (forces become significant)</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 7: ENTHALPY LAB ═══════════════════ -->
+<section id="enthalpy-lab">
+  <div class="section-title">
+    <h1>⚗️ Enthalpy Lab</h1>
+    <p class="subtitle">See how enthalpy changes during state transitions — and calculate heat energy with Q = mL</p>
+  </div>
+
+  <!-- ΔH concept strip -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:760px;margin:0 auto 28px;">
+    <div style="background:rgba(245,158,11,0.12);border:2px solid #F59E0B;border-radius:14px;padding:16px;text-align:center;">
+      <div style="font-size:2rem">🔺</div>
+      <strong style="color:#F59E0B;font-size:1.1rem;">Endothermic</strong>
+      <div style="font-size:.85rem;margin-top:6px;color:var(--muted);">ΔH is <strong style="color:#F59E0B">positive (+)</strong><br>Energy absorbed from surroundings<br>Feels cold to touch</div>
+      <div style="margin-top:8px;font-size:.8rem;background:rgba(245,158,11,0.1);border-radius:8px;padding:6px;">Melting · Boiling · Sublimation</div>
+    </div>
+    <div style="background:rgba(16,185,129,0.12);border:2px solid #10B981;border-radius:14px;padding:16px;text-align:center;">
+      <div style="font-size:2rem">🔻</div>
+      <strong style="color:#10B981;font-size:1.1rem;">Exothermic</strong>
+      <div style="font-size:.85rem;margin-top:6px;color:var(--muted);">ΔH is <strong style="color:#10B981">negative (−)</strong><br>Energy released to surroundings<br>Feels warm to touch</div>
+      <div style="margin-top:8px;font-size:.8rem;background:rgba(16,185,129,0.1);border-radius:8px;padding:6px;">Freezing · Condensation · Deposition</div>
+    </div>
+  </div>
+
+  <!-- Main interactive area -->
+  <div style="max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start;">
+
+    <!-- Left: Enthalpy graph canvas -->
+    <div style="background:var(--card);border-radius:18px;padding:20px;border:2px solid rgba(255,102,0,0.4);">
+      <h3 style="text-align:center;margin-bottom:12px;">📊 Enthalpy Change Graph</h3>
+      <canvas id="enthalpy-canvas" style="display:block;width:100%;height:320px;border-radius:12px;background:#060215;"></canvas>
+      <div id="enthalpy-desc" style="margin-top:12px;background:var(--card2);border-radius:10px;padding:12px;font-size:.85rem;line-height:1.65;min-height:60px;">
+        Select a state change below to see its enthalpy diagram.
+      </div>
+    </div>
+
+    <!-- Right: Controls panel -->
+    <div style="display:flex;flex-direction:column;gap:14px;">
+
+      <!-- State change selector -->
+      <div style="background:var(--card);border-radius:14px;padding:16px;border:2px solid rgba(124,58,237,0.3);">
+        <h3 style="margin-bottom:12px;font-size:1rem;">🔄 State Change</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="enth-btn-grid">
+          <button class="enth-sel-btn active" onclick="selectEnthChange('melt',this)" style="background:rgba(59,130,246,0.2);border:2px solid #3B82F6;border-radius:10px;padding:8px;font-family:Nunito;font-weight:700;font-size:.8rem;color:var(--text);cursor:pointer;">🧊→💧 Melting</button>
+          <button class="enth-sel-btn" onclick="selectEnthChange('freeze',this)" style="background:rgba(6,182,212,0.1);border:2px solid rgba(6,182,212,0.4);border-radius:10px;padding:8px;font-family:Nunito;font-weight:700;font-size:.8rem;color:var(--text);cursor:pointer;">💧→🧊 Freezing</button>
+          <button class="enth-sel-btn" onclick="selectEnthChange('boil',this)" style="background:rgba(245,158,11,0.1);border:2px solid rgba(245,158,11,0.4);border-radius:10px;padding:8px;font-family:Nunito;font-weight:700;font-size:.8rem;color:var(--text);cursor:pointer;">💧→💨 Boiling</button>
+          <button class="enth-sel-btn" onclick="selectEnthChange('condense',this)" style="background:rgba(16,185,129,0.1);border:2px solid rgba(16,185,129,0.4);border-radius:10px;padding:8px;font-family:Nunito;font-weight:700;font-size:.8rem;color:var(--text);cursor:pointer;">💨→💧 Condense</button>
+          <button class="enth-sel-btn" onclick="selectEnthChange('sublime',this)" style="background:rgba(124,58,237,0.1);border:2px solid rgba(124,58,237,0.4);border-radius:10px;padding:8px;font-family:Nunito;font-weight:700;font-size:.8rem;color:var(--text);cursor:pointer;">🧊→💨 Sublimation</button>
+          <button class="enth-sel-btn" onclick="selectEnthChange('deposit',this)" style="background:rgba(239,68,68,0.1);border:2px solid rgba(239,68,68,0.4);border-radius:10px;padding:8px;font-family:Nunito;font-weight:700;font-size:.8rem;color:var(--text);cursor:pointer;">💨→🧊 Deposition</button>
+        </div>
+      </div>
+
+      <!-- Q = mL calculator with slider + ±buttons -->
+      <div style="background:var(--card);border-radius:14px;padding:16px;border:2px solid rgba(255,102,0,0.35);">
+        <h3 style="margin-bottom:4px;font-size:1rem;">🧮 Q = m × L</h3>
+        <p style="color:var(--muted);font-size:.78rem;margin-bottom:12px;">Adjust the mass to see how heat energy (Q) changes</p>
+
+        <!-- Mass controls -->
+        <div style="font-weight:700;font-size:.85rem;margin-bottom:6px;">⚖️ Mass (kg)</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <button onclick="adjustEnthMass(-1)" style="width:34px;height:34px;border-radius:50%;border:2px solid var(--accent);background:var(--card2);color:var(--text);font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
+          <div style="flex:1;text-align:center;font-size:1.6rem;font-weight:900;color:#FFD700;" id="enth-mass-display">1.0</div>
+          <button onclick="adjustEnthMass(+1)" style="width:34px;height:34px;border-radius:50%;border:2px solid var(--accent);background:var(--card2);color:var(--text);font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
+        </div>
+        <input type="range" id="enth-mass-slider" min="0.1" max="20" step="0.1" value="1.0"
+          oninput="setEnthMass(parseFloat(this.value))"
+          style="width:100%;accent-color:#FF6600;">
+        <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);margin-top:2px;margin-bottom:12px;">
+          <span>0.1 kg</span><span>20 kg</span>
+        </div>
+
+        <!-- Result display -->
+        <div style="background:#06021a;border-radius:12px;padding:14px;text-align:center;border:2px solid rgba(255,102,0,0.4);">
+          <div style="font-size:.78rem;color:var(--muted);margin-bottom:4px;">Heat Energy Required (Q)</div>
+          <div id="enth-q-result" style="font-size:1.8rem;font-weight:900;color:#FF6600;">334,000 J</div>
+          <div id="enth-q-kj" style="font-size:1rem;color:#FFD700;margin-top:2px;">= 334.0 kJ</div>
+          <div id="enth-q-formula" style="font-size:.78rem;color:var(--muted);margin-top:6px;">Q = 1.0 kg × 334,000 J/kg</div>
+        </div>
+
+        <!-- L value display -->
+        <div style="margin-top:10px;background:var(--card2);border-radius:10px;padding:10px;font-size:.8rem;line-height:1.6;">
+          <div>🔬 <strong>L (Specific Latent Heat):</strong> <span id="enth-L-val" style="color:#FFD700;">334,000 J/kg</span></div>
+          <div style="color:var(--muted);margin-top:3px;" id="enth-L-name">Latent Heat of Fusion (water melting)</div>
+        </div>
+      </div>
+
+      <!-- ΔH chip -->
+      <div style="background:var(--card);border-radius:14px;padding:14px;text-align:center;border:2px solid rgba(245,158,11,0.4);">
+        <div style="font-size:.8rem;color:var(--muted);margin-bottom:4px;">Molar Enthalpy Change</div>
+        <div id="enth-dh" style="font-size:1.5rem;font-weight:900;color:#F59E0B;">ΔH = +6.01 kJ/mol</div>
+        <div id="enth-type-label" style="font-size:.8rem;color:#F59E0B;margin-top:4px;">🔺 Endothermic — absorbs energy</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+'use strict';
+// Polyfill roundRect for older browsers
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r){
+    r=Math.min(r,w/2,h/2);
+    this.beginPath();
+    this.moveTo(x+r,y);this.lineTo(x+w-r,y);this.arcTo(x+w,y,x+w,y+r,r);
+    this.lineTo(x+w,y+h-r);this.arcTo(x+w,y+h,x+w-r,y+h,r);
+    this.lineTo(x+r,y+h);this.arcTo(x,y+h,x,y+h-r,r);
+    this.lineTo(x,y+r);this.arcTo(x,y,x+r,y,r);
+    this.closePath();
+  };
+}
+// ═══════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+function showSection(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'learn')        setTimeout(() => { initLearnParticles(); drawLearnHeatingCurve(); }, 60);
+  if (id === 'lab')          setTimeout(initLab, 60);
+  if (id === 'plasma')       setTimeout(initPlasma, 60);
+  if (id === 'theory')       setTimeout(initTheory, 60);
+  if (id === 'graphs')       setTimeout(initGraphs, 60);
+  if (id === 'enthalpy-lab') setTimeout(initEnthalpyLab, 60);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LEARN SECTION — PARTICLE DEMOS
+// ═══════════════════════════════════════════════════════════════
+const learnRAF = {};
+
+function initLearnParticles() {
+  drawLearnDemo('pdemo-solid',  'solid');
+  drawLearnDemo('pdemo-liquid', 'liquid');
+  drawLearnDemo('pdemo-gas',    'gas');
+  drawLearnDemo('pdemo-plasma', 'plasma');
+}
+
+function drawLearnDemo(id, type) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const W = canvas.offsetWidth  || 240;
+  const H = canvas.offsetHeight || 160;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const COLS = { solid:'#3B82F6', liquid:'#06B6D4', gas:'#F59E0B', plasma:'#EF4444' };
+  const col  = COLS[type];
+  const R    = 5; // particle radius
+
+  // ── BUILD PARTICLES ──────────────────────────────────────
+  const particles = [];
+
+  if (type === 'solid') {
+    // Perfect 10×10 grid, centred in canvas
+    const GRID = 10, SPACING = 14;
+    const offX  = W / 2 - ((GRID - 1) * SPACING) / 2;
+    const offY  = H / 2 - ((GRID - 1) * SPACING) / 2;
+    for (let r = 0; r < GRID; r++) {
+      for (let c = 0; c < GRID; c++) {
+        particles.push({
+          ox: offX + c * SPACING,
+          oy: offY + r * SPACING,
+          x: 0, y: 0,
+          phase: Math.random() * Math.PI * 2   // random phase so vibrations look natural
+        });
+      }
+    }
+  } else if (type === 'liquid') {
+    // 5×6 cluster with gravity-driven settling
+    const GRID = 6, SPACING = 16;
+    const offX = W/2 - ((GRID-1)*SPACING)/2;
+    const offY = H/2 - ((GRID-1)*SPACING)/2;
+    for (let r = 0; r < GRID; r++) {
+      for (let c = 0; c < GRID; c++) {
+        // Start particles spread around centre, give small random lateral kick
+        particles.push({
+          x:  offX + c*SPACING + (Math.random()-.5)*6,
+          y:  offY + r*SPACING + (Math.random()-.5)*6,
+          vx: (Math.random()-.5) * 0.4,
+          vy: (Math.random()-.5) * 0.4
+        });
+      }
+    }
+  } else if (type === 'gas') {
+    for (let i = 0; i < 22; i++) {
+      const spd = 1.2 + Math.random() * 1.5;
+      const ang = Math.random() * Math.PI * 2;
+      particles.push({ x: R+Math.random()*(W-R*2), y: R+Math.random()*(H-R*2), vx: Math.cos(ang)*spd, vy: Math.sin(ang)*spd });
+    }
+  } else { // plasma
+    for (let i = 0; i < 18; i++) {
+      const spd = 2.5 + Math.random() * 3;
+      const ang = Math.random() * Math.PI * 2;
+      particles.push({ x: R+Math.random()*(W-R*2), y: R+Math.random()*(H-R*2), vx: Math.cos(ang)*spd, vy: Math.sin(ang)*spd });
+    }
+  }
+
+  let t = 0;
+  if (learnRAF[id]) cancelAnimationFrame(learnRAF[id]);
+
+  function animate() {
+    t += 0.04;
+    ctx.clearRect(0, 0, W, H);
+
+    // Floor line for liquid (shows surface they pool on)
+    if (type === 'liquid') {
+      ctx.beginPath();
+      ctx.moveTo(4, H - 4); ctx.lineTo(W - 4, H - 4);
+      ctx.strokeStyle = 'rgba(6,182,212,0.35)'; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+
+    particles.forEach(p => {
+      if (type === 'solid') {
+        // Vibrate symmetrically around origin — small amplitude
+        p.x = p.ox + Math.sin(t + p.phase) * 0.7;
+        p.y = p.oy + Math.cos(t * 1.3 + p.phase) * 0.7;
+        ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, Math.PI*2);
+        ctx.fillStyle = col; ctx.fill();
+        // Draw a faint bond to neighbours (makes lattice visible)
+      } else if (type === 'liquid') {
+        // Gravity-driven: particles sink to the floor of the canvas
+        const GRAVITY      = 0.04;
+        const DAMPING      = 0.985;
+        const FLOOR_BOUNCE = 0.22;
+        const WALL_BOUNCE  = 0.35;
+
+        p.vy += GRAVITY;
+        p.vx *= DAMPING;
+        p.vy *= DAMPING;
+        p.vx += (Math.random() - 0.5) * 0.06;
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.y > H - R - 4) {
+          p.y  = H - R - 4;
+          p.vy = -Math.abs(p.vy) * FLOOR_BOUNCE;
+          p.vx *= 0.82;
+        }
+        if (p.y < R + 4) { p.y = R + 4; p.vy = Math.abs(p.vy) * 0.2; }
+        if (p.x < R + 4)    { p.x = R + 4;   p.vx =  Math.abs(p.vx) * (1 - WALL_BOUNCE); }
+        if (p.x > W - R - 4){ p.x = W-R-4;   p.vx = -Math.abs(p.vx) * (1 - WALL_BOUNCE); }
+
+        ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, Math.PI*2);
+        ctx.fillStyle = col; ctx.fill();
+      } else {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < R)    { p.x = R;    p.vx = Math.abs(p.vx); }
+        if (p.x > W-R)  { p.x = W-R;  p.vx = -Math.abs(p.vx); }
+        if (p.y < R)    { p.y = R;    p.vy = Math.abs(p.vy); }
+        if (p.y > H-R)  { p.y = H-R;  p.vy = -Math.abs(p.vy); }
+        if (type === 'plasma') {
+          // Glow effect for plasma particles
+          const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, R*3.5);
+          g.addColorStop(0, '#ffffff'); g.addColorStop(0.35, col); g.addColorStop(1, 'transparent');
+          ctx.beginPath(); ctx.arc(p.x, p.y, R*3.5, 0, Math.PI*2); ctx.fillStyle = g; ctx.fill();
+        } else {
+          ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, Math.PI*2); ctx.fillStyle = col; ctx.fill();
+        }
+      }
+    });
+
+    // Draw lattice bonds for solid
+    if (type === 'solid') {
+      const GRID = 10, SPACING = 14;
+      ctx.strokeStyle = 'rgba(59,130,246,0.25)'; ctx.lineWidth = 0.8;
+      for (let r = 0; r < GRID; r++) {
+        for (let c = 0; c < GRID; c++) {
+          const i = r * GRID + c;
+          if (c < GRID-1) {
+            const j = r * GRID + c + 1;
+            ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+          }
+          if (r < GRID-1) {
+            const j = (r+1) * GRID + c;
+            ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+          }
+        }
+      }
+    }
+
+    // Liquid particle-particle soft collision pass — gives sliding behaviour
+    if (type === 'liquid') {
+      const DIAM = R * 2, SOFT = 0.18, n = particles.length;
+      for (let a = 0; a < n - 1; a++) {
+        const pa = particles[a];
+        for (let b = a + 1; b < n; b++) {
+          const pb = particles[b];
+          const dx = pb.x - pa.x, dy = pb.y - pa.y;
+          const d2 = dx*dx + dy*dy;
+          if (d2 < DIAM*DIAM && d2 > 0.0001) {
+            const d = Math.sqrt(d2), ovlp = (DIAM - d) * 0.5;
+            const nx = dx/d, ny = dy/d;
+            pa.x -= nx*ovlp; pa.y -= ny*ovlp;
+            pb.x += nx*ovlp; pb.y += ny*ovlp;
+            const dvx = pb.vx - pa.vx, dvy = pb.vy - pa.vy;
+            const dot = dvx*nx + dvy*ny;
+            if (dot < 0) {
+              const imp = dot * (1 + SOFT) * 0.5;
+              pa.vx += imp*nx; pa.vy += imp*ny;
+              pb.vx -= imp*nx; pb.vy -= imp*ny;
+            }
+          }
+        }
+      }
+    }
+
+    learnRAF[id] = requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HEAT LAB
+// ═══════════════════════════════════════════════════════════════
+let labCtx, labW, labH;
+let labParticles  = [];
+let labFlame      = 0;     // 0-100
+let labTemp       = 0;     // °C (0-120)
+let labContainer  = 'square';
+let labSizeRatio  = 1.0;   // 0.4-1.0 from slider
+let labAnim       = null;
+let labPrevState  = 'solid'; // track transitions
+
+// Container geometry (recomputed each frame)
+let labCX, labCY, labCW, labCH;
+
+function getContainerBounds() {
+  const baseW = labW - 80;
+  const baseH = labH - 110;
+  let cw, ch;
+
+  if (labContainer === 'square') {
+    cw = baseW * labSizeRatio;
+    ch = baseH * labSizeRatio;
+  } else if (labContainer === 'tall') {
+    cw = Math.min(140, baseW * 0.5) * labSizeRatio;
+    ch = baseH * labSizeRatio;
+  } else { // wide
+    cw = baseW * labSizeRatio;
+    ch = Math.min(140, baseH * 0.6) * labSizeRatio;
+  }
+
+  const cx = (labW - cw) / 2;
+  const cy = 20 + (baseH - ch) * 0.3; // keep top gap consistent
+  return { cx, cy, cw, ch };
+}
+
+function initLab() {
+  const canvas = document.getElementById('lab-canvas');
+  labCtx = canvas.getContext('2d');
+  labW   = canvas.offsetWidth  || 560;
+  labH   = canvas.offsetHeight || 380;
+  canvas.width  = labW;
+  canvas.height = labH;
+  if (!labParticles.length) resetLab();
+  else { if (labAnim) cancelAnimationFrame(labAnim); labLoop(); }
+}
+
+function resetLab() {
+  labFlame = 0; labTemp = 0;
+  document.getElementById('flame-slider').value = 0;
+  document.getElementById('flame-val').textContent = '0';
+  document.getElementById('temp-display').textContent = '0°C';
+  labPrevState = 'solid';
+  updateLabUI();
+
+  // Build 10×10 grid centred in the container
+  labParticles = [];
+  const { cx, cy, cw, ch } = getContainerBounds();
+  const GRID = 10, SPACING = 16;
+  const startX = cx + cw/2 - (GRID-1)*SPACING/2;
+  const startY = cy + ch/2 - (GRID-1)*SPACING/2;
+
+  for (let r = 0; r < GRID; r++) {
+    for (let c = 0; c < GRID; c++) {
+      const ox = startX + c * SPACING;
+      const oy = startY + r * SPACING;
+      labParticles.push({ x: ox, y: oy, ox, oy, vx: 0, vy: 0, t: Math.random() * Math.PI * 2 });
+    }
+  }
+
+  if (labAnim) cancelAnimationFrame(labAnim);
+  labLoop();
+}
+
+function updateFlame(v) {
+  labFlame = parseInt(v);
+  document.getElementById('flame-val').textContent = v;
+  labTemp = labFlame * 1.2;  // 0→0°C, 100→120°C
+  document.getElementById('temp-display').textContent = Math.round(labTemp) + '°C';
+  updateLabUI();
+}
+
+function updateContainerSize(v) {
+  labSizeRatio = parseInt(v) / 100;
+  document.getElementById('container-size-val').textContent = v;
+  // Clamp particles that are now outside smaller container
+  clampParticlesToContainer();
+  updateLabUI();
+}
+
+function clampParticlesToContainer() {
+  const { cx, cy, cw, ch } = getContainerBounds();
+  const R = 5;
+  labParticles.forEach(p => {
+    p.x = Math.min(Math.max(p.x, cx + R), cx + cw - R);
+    p.y = Math.min(Math.max(p.y, cy + R), cy + ch - R);
+    if (p.ox !== undefined) {
+      p.ox = Math.min(Math.max(p.ox, cx + R), cx + cw - R);
+      p.oy = Math.min(Math.max(p.oy, cy + R), cy + ch - R);
+    }
+  });
+}
+
+function updateLabUI() {
+  const t = Math.round(labTemp);
+  let state, sc;
+  if (t < 1)       { state = '🧊 SOLID';  sc = '#3B82F6'; }
+  else if (t < 100){ state = '💧 LIQUID'; sc = '#06B6D4'; }
+  else             { state = '💨 GAS';    sc = '#F59E0B'; }
+
+  const sd = document.getElementById('state-display');
+  sd.textContent   = state;
+  sd.style.borderColor = sc;
+
+  // Pressure: more particles per unit volume = higher pressure
+  const { cw, ch } = getContainerBounds();
+  const vol   = (cw * ch) / 10000;   // normalised
+  const pBase = labTemp >= 100 ? 3 : 1;
+  const pVal  = (pBase / Math.max(vol, 0.1)).toFixed(1);
+  let pressLabel = '💨 Normal';
+  if (labTemp >= 100) {
+    if (labSizeRatio < 0.6) pressLabel = '🔴 Very High!';
+    else if (labSizeRatio < 0.8) pressLabel = '🟠 High!';
+    else pressLabel = '🟡 Elevated';
+  }
+  document.getElementById('pressure-display').textContent = '⚗️ Pressure: ' + pressLabel;
+}
+
+function setContainer(type, btn) {
+  labContainer = type;
+  document.querySelectorAll('.container-select button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  clampParticlesToContainer();
+  updateLabUI();
+}
+
+function labLoop() {
+  if (!labCtx) return;
+  const { cx, cy, cw, ch } = getContainerBounds();
+  labCX = cx; labCY = cy; labCW = cw; labCH = ch;
+
+  const R = 5;
+  const t = labTemp;
+  const state = t < 1 ? 'solid' : t < 100 ? 'liquid' : 'gas';
+
+  // If state changed, initialise velocities
+  if (state !== labPrevState) {
+    if (state === 'liquid') {
+      // Give each particle a small downward nudge so gravity takes over naturally
+      labParticles.forEach(p => {
+        p.vx = (Math.random() - 0.5) * 0.5;
+        p.vy = Math.random() * 0.5;   // downward
+      });
+    }
+    if (state === 'gas') {
+      labParticles.forEach(p => {
+        const spd = 1.5 + Math.random(); const ang = Math.random() * Math.PI * 2;
+        p.vx = Math.cos(ang) * spd; p.vy = Math.sin(ang) * spd;
+      });
+    }
+    labPrevState = state;
+  }
+
+  labCtx.clearRect(0, 0, labW, labH);
+
+  // ── CONTAINER ─────────────────────────────────────────────
+  labCtx.save();
+  labCtx.strokeStyle = 'rgba(150,120,255,0.55)'; labCtx.lineWidth = 2.5;
+  labCtx.shadowBlur  = 8; labCtx.shadowColor = '#7C3AED';
+  labCtx.strokeRect(cx, cy, cw, ch);
+  labCtx.restore();
+
+  // Floor glow for liquid state — shows the surface particles settle on
+  if (state === 'liquid') {
+    labCtx.save();
+    labCtx.strokeStyle = 'rgba(6,182,212,0.5)'; labCtx.lineWidth = 2;
+    labCtx.shadowBlur = 6; labCtx.shadowColor = '#06B6D4';
+    labCtx.beginPath();
+    labCtx.moveTo(cx + 4, cy + ch); labCtx.lineTo(cx + cw - 4, cy + ch);
+    labCtx.stroke();
+    labCtx.restore();
+  }
+
+  // ── FLAME + BUNSEN BURNER ─────────────────────────────────
+  if (labFlame > 0) {
+    const fx  = labW / 2;
+    const fby = cy + ch + 20; // burner top, just below container
+    const fh  = 16 + (labFlame / 100) * 55;
+
+    // Flame glow (animated flicker)
+    const flicker = 1 + Math.sin(Date.now() * 0.015) * 0.15;
+    const fg = labCtx.createRadialGradient(fx, fby, 2, fx, fby, fh * flicker);
+    fg.addColorStop(0,   '#ffffff');
+    fg.addColorStop(0.2, '#FFD700');
+    fg.addColorStop(0.6, '#FF6600');
+    fg.addColorStop(1,   'transparent');
+    labCtx.beginPath();
+    labCtx.arc(fx, fby - fh * 0.4 * flicker, fh * 0.6 * flicker, 0, Math.PI * 2);
+    labCtx.fillStyle = fg; labCtx.fill();
+
+    // Burner body
+    labCtx.fillStyle = '#666';
+    labCtx.fillRect(fx - 10, fby, 20, 18);
+    labCtx.fillStyle = '#555';
+    labCtx.fillRect(fx - 14, fby + 18, 28, 6);
+  }
+
+  // ── UPDATE + DRAW PARTICLES ───────────────────────────────
+  const tick = Date.now() * 0.001;
+
+  labParticles.forEach((p, idx) => {
+    p.t += 0.045;
+
+    if (state === 'solid') {
+      // Vibration amplitude scales with temperature — kept subtle
+      const amp = 0.3 + (labFlame / 100) * 1.2;
+      p.x = p.ox + Math.sin(p.t) * amp;
+      p.y = p.oy + Math.cos(p.t * 1.27 + p.t * 0.1) * amp;
+
+    } else if (state === 'liquid') {
+      // Gravity-driven: particles sink and pool at the bottom of container
+      const GRAVITY      = 0.06;
+      const DAMPING      = 0.988;
+      const FLOOR_BOUNCE = 0.15;   // very inelastic — liquid doesn't spring back
+      const WALL_BOUNCE  = 0.30;
+
+      // Thermal agitation scales with temperature (gentle horizontal jitter only)
+      const thermalX = (labFlame / 100) * 0.10;
+      p.vx += (Math.random() - 0.5) * thermalX;
+      p.vy += GRAVITY;
+      p.vx *= DAMPING;
+      p.vy *= DAMPING;
+
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // Floor — inelastic so they settle
+      if (p.y > cy + ch - R) {
+        p.y  = cy + ch - R;
+        p.vy = -Math.abs(p.vy) * FLOOR_BOUNCE;
+        p.vx *= 0.80;   // floor friction
+      }
+      // Ceiling
+      if (p.y < cy + R) { p.y = cy + R; p.vy = Math.abs(p.vy) * 0.2; }
+      // Walls — inelastic
+      if (p.x < cx + R)      { p.x = cx + R;      p.vx =  Math.abs(p.vx) * (1 - WALL_BOUNCE); }
+      if (p.x > cx + cw - R) { p.x = cx + cw - R; p.vx = -Math.abs(p.vx) * (1 - WALL_BOUNCE); }
+
+    } else { // gas
+      const targetSpd = 1.2 + (labFlame - 83) * 0.08;
+      const curSpd    = Math.sqrt(p.vx*p.vx + p.vy*p.vy) || 0.01;
+      p.vx = (p.vx / curSpd) * targetSpd + (Math.random()-.5)*0.08;
+      p.vy = (p.vy / curSpd) * targetSpd + (Math.random()-.5)*0.08;
+      p.x += p.vx; p.y += p.vy;
+      // Strict boundary bounce — particles CANNOT leave container
+      if (p.x < cx + R)       { p.x = cx + R;       p.vx = Math.abs(p.vx); }
+      if (p.x > cx + cw - R)  { p.x = cx + cw - R;  p.vx = -Math.abs(p.vx); }
+      if (p.y < cy + R)       { p.y = cy + R;        p.vy = Math.abs(p.vy); }
+      if (p.y > cy + ch - R)  { p.y = cy + ch - R;   p.vy = -Math.abs(p.vy); }
+    }
+
+    // Choose colour
+    const pCol = state==='solid' ? '#3B82F6' : state==='liquid' ? '#06B6D4' : '#F59E0B';
+
+
+    // Draw lattice bonds for solid
+    if (state === 'solid' && idx % 10 < 9) {
+      const next = labParticles[idx + 1];
+      if (next) {
+        labCtx.beginPath(); labCtx.moveTo(p.x, p.y); labCtx.lineTo(next.x, next.y);
+        labCtx.strokeStyle = 'rgba(59,130,246,0.2)'; labCtx.lineWidth = 0.8; labCtx.stroke();
+      }
+    }
+    if (state === 'solid' && idx < 90) {
+      const below = labParticles[idx + 10];
+      if (below) {
+        labCtx.beginPath(); labCtx.moveTo(p.x, p.y); labCtx.lineTo(below.x, below.y);
+        labCtx.strokeStyle = 'rgba(59,130,246,0.2)'; labCtx.lineWidth = 0.8; labCtx.stroke();
+      }
+    }
+
+    // Particle dot
+    labCtx.beginPath(); labCtx.arc(p.x, p.y, R, 0, Math.PI * 2);
+    labCtx.fillStyle = pCol; labCtx.fill();
+  });
+
+  // ── LIQUID PARTICLE–PARTICLE SOFT COLLISION PASS ──────────
+  // Runs after all positions are updated so particles can slide past each other.
+  // Uses a soft repulsion: overlapping pairs exchange momentum gently.
+  if (state === 'liquid') {
+    const DIAM      = R * 2;           // collision diameter (px)
+    const SOFTNESS  = 0.18;            // how elastic the collision is (0=inelastic, 1=elastic)
+    const n = labParticles.length;
+    for (let a = 0; a < n - 1; a++) {
+      const pa = labParticles[a];
+      for (let b = a + 1; b < n; b++) {
+        const pb  = labParticles[b];
+        const dx  = pb.x - pa.x;
+        const dy  = pb.y - pa.y;
+        const d2  = dx * dx + dy * dy;
+        if (d2 < DIAM * DIAM && d2 > 0.0001) {
+          const d    = Math.sqrt(d2);
+          const ovlp = (DIAM - d) * 0.5;
+          const nx   = dx / d;
+          const ny   = dy / d;
+
+          // Push the two particles apart (positional correction)
+          pa.x -= nx * ovlp;
+          pa.y -= ny * ovlp;
+          pb.x += nx * ovlp;
+          pb.y += ny * ovlp;
+
+          // Exchange velocity along the collision normal (sliding = only normal component swaps)
+          const dvx  = pb.vx - pa.vx;
+          const dvy  = pb.vy - pa.vy;
+          const dot  = dvx * nx + dvy * ny;   // relative velocity along normal
+          if (dot < 0) {                        // only resolve if approaching
+            const impulse = dot * (1 + SOFTNESS) * 0.5;
+            pa.vx += impulse * nx;
+            pa.vy += impulse * ny;
+            pb.vx -= impulse * nx;
+            pb.vy -= impulse * ny;
+          }
+        }
+      }
+    }
+  }
+
+  // ── STATE LABEL ───────────────────────────────────────────
+  labCtx.font = 'bold 13px Nunito'; labCtx.textAlign = 'center';
+  labCtx.fillStyle = 'rgba(180,160,255,0.55)';
+  labCtx.fillText(state.toUpperCase() + ' STATE', labW/2, cy + ch + 14);
+  labCtx.textAlign = 'left';
+
+  // ── MINI PV GRAPH (throttled to every 6 frames) ────────
+  if (!labLoop._pvTick) labLoop._pvTick = 0;
+  labLoop._pvTick++;
+  if (labLoop._pvTick % 6 === 0) {
+    const pvState = labTemp < 1 ? 'solid' : labTemp < 100 ? 'liquid' : 'gas';
+    updateLabMiniPV(pvState, labTemp, labSizeRatio);
+  }
+
+  labAnim = requestAnimationFrame(labLoop);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PLASMA LAB — smooth physics-accurate simulations
+// ═══════════════════════════════════════════════════════════════
+let plasmaCtx, plasmaW, plasmaH;
+let plasmaAnim       = null;
+let currentPlasma    = 'aurora';
+let plasmaEnergy     = 50;
+let plasmaMag        = 30;
+let plasmaParticles  = [];
+
+// Plasma particle physics constants
+const PLASMA_CONFIG = {
+  aurora:      { cols: ['#00FF99','#33FFCC','#AA00FF','#6600FF'], mode: 'aurora'    },
+  lightning:   { cols: ['#FFFFFF','#FFD700','#AADDFF'],           mode: 'lightning' },
+  fluorescent: { cols: ['#CC99FF','#FFFFFF','#9933FF'],           mode: 'particle'  },
+  solar:       { cols: ['#FF6600','#FFD700','#FF4400'],           mode: 'particle'  },
+  fusion:      { cols: ['#00CCFF','#FFFFFF','#0066FF'],           mode: 'particle'  },
+  ball:        { cols: ['#FF00FF','#CC44FF','#FFFFFF'],           mode: 'ball'      }
+};
+
+const plasmaInfo = {
+  aurora:      { name:'🌌 Aurora (Northern Lights)',    desc:'Charged particles from the Sun collide with gas atoms in Earth\'s upper atmosphere. Electrons are stripped from atoms, creating glowing ionised plasma curtains.',                  temp:'~1,000–5,000°C'     },
+  lightning:   { name:'⚡ Lightning',                    desc:'A massive electric discharge that ionises the air into plasma in milliseconds. The plasma channel heats so fast it expands explosively, creating thunder!',                         temp:'~30,000°C'          },
+  fluorescent: { name:'💡 Fluorescent Light',           desc:'Electric current ionises mercury vapour inside the glass tube. The resulting plasma emits ultraviolet light, which the phosphor coating converts to visible white light.',           temp:'~20,000°C (inside)' },
+  solar:       { name:'☀️ Solar Wind',                  desc:'The Sun continuously ejects streams of plasma — protons, electrons and alpha particles — at hundreds of km/s. These slam into Earth\'s magnetic field, causing auroras.',            temp:'~100,000°C'         },
+  fusion:      { name:'🔵 Nuclear Fusion (Tokamak)',    desc:'Hydrogen plasma is magnetically confined and heated to 10× the temperature of the Sun\'s core. At these energies, nuclei fuse and release enormous amounts of energy.',              temp:'>100,000,000°C'     },
+  ball:        { name:'🔮 Plasma Ball',                  desc:'A high-voltage central electrode ionises noble gas inside the glass sphere. Tendrils of plasma follow electric field lines toward grounded objects — including your fingertips!',    temp:'~10,000°C (tendrils)'}
+};
+
+function selectPlasma(type, btn) {
+  currentPlasma = type;
+  document.querySelectorAll('.plasma-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const d = plasmaInfo[type];
+  document.getElementById('plasma-info').innerHTML =
+    `<strong>${d.name}</strong><br>${d.desc}<br><br>🌡️ Temperature: <strong>${d.temp}</strong>`;
+  buildPlasmaParticles();
+}
+
+function updatePlasmaEnergy(v) {
+  plasmaEnergy = parseInt(v);
+  document.getElementById('energy-val').textContent = v;
+  buildPlasmaParticles();
+}
+function updateMag(v) {
+  plasmaMag = parseInt(v);
+  document.getElementById('mag-val').textContent = v;
+}
+
+function initPlasma() {
+  const canvas = document.getElementById('plasma-canvas');
+  plasmaCtx = canvas.getContext('2d');
+  plasmaW = canvas.offsetWidth  || 560;
+  plasmaH = canvas.offsetHeight || 340;
+  canvas.width  = plasmaW;
+  canvas.height = plasmaH;
+  buildPlasmaParticles();
+  if (plasmaAnim) cancelAnimationFrame(plasmaAnim);
+  plasmaLoop();
+}
+
+function buildPlasmaParticles() {
+  const cfg   = PLASMA_CONFIG[currentPlasma];
+  const count = 30 + Math.round(plasmaEnergy * 0.7);
+  plasmaParticles = [];
+  for (let i = 0; i < count; i++) {
+    const spd = (1 + Math.random() * 2) * (plasmaEnergy / 50);
+    const ang = Math.random() * Math.PI * 2;
+    plasmaParticles.push({
+      x:    Math.random() * plasmaW,
+      y:    Math.random() * plasmaH,
+      vx:   Math.cos(ang) * spd,
+      vy:   Math.sin(ang) * spd,
+      col:  cfg.cols[Math.floor(Math.random() * cfg.cols.length)],
+      r:    1.5 + Math.random() * 2.5,
+      life: Math.random(),       // for trail/fade
+      charge: Math.random() > 0.5 ? 1 : -1   // for magnetic deflection
+    });
+  }
+}
+
+// Persistent trail buffer
+let trailCanvas, trailCtx;
+function ensureTrail() {
+  if (!trailCanvas || trailCanvas.width !== plasmaW) {
+    trailCanvas = document.createElement('canvas');
+    trailCanvas.width  = plasmaW;
+    trailCanvas.height = plasmaH;
+    trailCtx = trailCanvas.getContext('2d');
+    trailCtx.fillStyle = '#030010';
+    trailCtx.fillRect(0, 0, plasmaW, plasmaH);
+  }
+}
+
+function plasmaLoop() {
+  if (!plasmaCtx) return;
+  const mode = PLASMA_CONFIG[currentPlasma].mode;
+
+  if (mode === 'aurora')     drawAurora();
+  else if (mode === 'lightning') drawLightning();
+  else if (mode === 'ball')  drawPlasmaBall();
+  else                       drawParticlePlasma();
+
+  plasmaAnim = requestAnimationFrame(plasmaLoop);
+}
+
+// ── AURORA ────────────────────────────────────────────────────
+function drawAurora() {
+  const ctx = plasmaCtx;
+  ctx.clearRect(0, 0, plasmaW, plasmaH);
+  // Deep space background
+  ctx.fillStyle = '#000610'; ctx.fillRect(0, 0, plasmaW, plasmaH);
+
+  // Stars
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  for (let i = 0; i < 60; i++) {
+    const sx = (i * 137.5) % plasmaW;
+    const sy = (i * 79.3)  % (plasmaH * 0.6);
+    ctx.fillRect(sx, sy, 1, 1);
+  }
+
+  const now  = Date.now() * 0.0008;
+  const magF = plasmaMag / 100;
+  const enF  = plasmaEnergy / 100;
+
+  // Draw layered aurora bands
+  for (let band = 0; band < 5; band++) {
+    const baseY  = plasmaH * (0.15 + band * 0.14);
+    const height = 40 + enF * 50 + band * 10;
+    const alpha  = 0.15 + enF * 0.35;
+
+    ctx.save();
+    for (let x = 0; x < plasmaW; x += 1) {
+      const wave1 = Math.sin(x * 0.012 + now + band * 0.9) * 22 * magF;
+      const wave2 = Math.sin(x * 0.022 - now * 1.3 + band) * 14 * magF;
+      const cy    = baseY + wave1 + wave2;
+      const hh    = height * (0.7 + Math.sin(x * 0.015 + now * 0.7) * 0.3);
+
+      // Colour varies along x for rainbow effect
+      const hue   = (band * 50 + x * 0.3 + now * 20) % 360;
+      const grad  = ctx.createLinearGradient(x, cy - hh, x, cy + hh*0.3);
+      grad.addColorStop(0,   'transparent');
+      grad.addColorStop(0.3, `hsla(${hue},100%,65%,${alpha})`);
+      grad.addColorStop(0.7, `hsla(${(hue+40)%360},100%,55%,${alpha*0.6})`);
+      grad.addColorStop(1,   'transparent');
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(x, cy - hh, 1, hh * 1.3);
+    }
+    ctx.restore();
+  }
+}
+
+// ── LIGHTNING ─────────────────────────────────────────────────
+let lightningBolt = null;
+let lightningTimer = 0;
+
+function generateBolt(sx, sy, ex, ey, depth) {
+  if (depth === 0) return [{ x: sx, y: sy }, { x: ex, y: ey }];
+  const mx  = (sx + ex) / 2 + (Math.random() - 0.5) * 50;
+  const my  = (sy + ey) / 2 + (Math.random() - 0.5) * 20;
+  return [...generateBolt(sx, sy, mx, my, depth-1), ...generateBolt(mx, my, ex, ey, depth-1)];
+}
+
+function drawLightning() {
+  const ctx = plasmaCtx;
+  lightningTimer++;
+
+  // New bolt every ~20 frames (frequency scales with energy)
+  const freq = Math.max(5, 30 - plasmaEnergy * 0.22);
+  if (lightningTimer % Math.round(freq) === 0) {
+    const sx = plasmaW * 0.3 + Math.random() * plasmaW * 0.4;
+    lightningBolt = generateBolt(sx, 0, sx + (Math.random()-0.5)*60, plasmaH, 4);
+  }
+
+  // Fade background (dark, with slight persistence for afterglow)
+  ctx.fillStyle = 'rgba(2,0,14,0.85)'; ctx.fillRect(0, 0, plasmaW, plasmaH);
+
+  if (lightningBolt) {
+    // Outer glow
+    ctx.save();
+    ctx.shadowBlur  = 30; ctx.shadowColor = '#AAD4FF';
+    ctx.strokeStyle = 'rgba(150,200,255,0.3)'; ctx.lineWidth = 8;
+    ctx.beginPath();
+    lightningBolt.forEach((pt, i) => i === 0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y));
+    ctx.stroke();
+
+    // Mid glow
+    ctx.shadowBlur  = 12; ctx.shadowColor = '#FFD700';
+    ctx.strokeStyle = 'rgba(255,220,100,0.7)'; ctx.lineWidth = 3;
+    ctx.beginPath();
+    lightningBolt.forEach((pt, i) => i === 0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y));
+    ctx.stroke();
+
+    // Core white
+    ctx.shadowBlur  = 4;
+    ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    lightningBolt.forEach((pt, i) => i === 0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y));
+    ctx.stroke();
+    ctx.restore();
+
+    // Screen flash on fresh bolt
+    if (lightningTimer % Math.round(freq) < 3) {
+      const flashAlpha = 0.08 + plasmaEnergy * 0.0015;
+      ctx.fillStyle = `rgba(200,220,255,${flashAlpha})`;
+      ctx.fillRect(0, 0, plasmaW, plasmaH);
+    }
+  }
+}
+
+// ── PLASMA BALL ──────────────────────────────────────────────
+let ballFilaments = [];
+let ballTick = 0;
+
+function initBallFilaments() {
+  const count = 4 + Math.round(plasmaEnergy * 0.06);
+  ballFilaments = [];
+  for (let i = 0; i < count; i++) {
+    ballFilaments.push({
+      baseAngle: (i / count) * Math.PI * 2,
+      angSpeed:  (0.3 + Math.random() * 0.4) * (Math.random() > 0.5 ? 1 : -1),
+      reach:     0.55 + Math.random() * 0.35   // 0→1 fraction of sphere radius
+    });
+  }
+}
+
+function drawPlasmaBall() {
+  const ctx = plasmaCtx;
+  ballTick++;
+  ctx.clearRect(0, 0, plasmaW, plasmaH);
+  ctx.fillStyle = '#030010'; ctx.fillRect(0, 0, plasmaW, plasmaH);
+
+  const cx  = plasmaW / 2;
+  const cy  = plasmaH / 2;
+  const sr  = Math.min(plasmaW, plasmaH) * 0.36;  // sphere radius
+
+  // Sphere glass shell
+  const shellGrad = ctx.createRadialGradient(cx - sr*0.25, cy - sr*0.25, sr*0.05, cx, cy, sr);
+  shellGrad.addColorStop(0,   'rgba(180,160,255,0.06)');
+  shellGrad.addColorStop(0.85,'rgba(100,60,200,0.04)');
+  shellGrad.addColorStop(1,   'rgba(180,140,255,0.18)');
+  ctx.beginPath(); ctx.arc(cx, cy, sr, 0, Math.PI*2);
+  ctx.fillStyle   = shellGrad; ctx.fill();
+  ctx.strokeStyle = 'rgba(180,140,255,0.35)'; ctx.lineWidth = 2; ctx.stroke();
+
+  // Sphere highlight
+  const hlGrad = ctx.createRadialGradient(cx - sr*0.3, cy - sr*0.3, 2, cx - sr*0.2, cy - sr*0.2, sr*0.45);
+  hlGrad.addColorStop(0,   'rgba(255,255,255,0.2)');
+  hlGrad.addColorStop(1,   'transparent');
+  ctx.beginPath(); ctx.arc(cx, cy, sr, 0, Math.PI*2); ctx.fillStyle = hlGrad; ctx.fill();
+
+  // Centre glow (electrode)
+  const enF = plasmaEnergy / 100;
+  const cg  = ctx.createRadialGradient(cx, cy, 0, cx, cy, 22 + enF * 12);
+  cg.addColorStop(0,   '#ffffff');
+  cg.addColorStop(0.3, '#DD88FF');
+  cg.addColorStop(0.7, '#8800FF');
+  cg.addColorStop(1,   'transparent');
+  ctx.beginPath(); ctx.arc(cx, cy, 22 + enF * 12, 0, Math.PI*2);
+  ctx.fillStyle = cg; ctx.fill();
+
+  // Magnetic deflection: B-field bends paths
+  const magF   = plasmaMag / 100;
+  const now    = ballTick * 0.018;
+  const cfg    = PLASMA_CONFIG[currentPlasma];
+
+  if (!ballFilaments.length || ballTick % 40 === 0) initBallFilaments();
+
+  ballFilaments.forEach((fil, fi) => {
+    const angle  = fil.baseAngle + now * fil.angSpeed + Math.sin(now * 0.7 + fi) * magF * 0.8;
+    const reach  = fil.reach * sr * (0.9 + enF * 0.2);
+    const jitter = 5 + enF * 8;
+
+    // Generate jagged path from centre to sphere edge
+    const pts = [{ x: cx, y: cy }];
+    for (let seg = 1; seg <= 10; seg++) {
+      const frac    = seg / 10;
+      const curAngle = angle + Math.sin(frac * 8 + now * 2 + fi) * 0.25 * (1 - frac);
+      const magBend  = magF * frac * 0.4 * Math.sin(now * 1.5 + fi * 2.3);
+      const px = cx + Math.cos(curAngle + magBend) * reach * frac + (Math.random()-.5)*jitter*(1-frac*0.5);
+      const py = cy + Math.sin(curAngle + magBend) * reach * frac + (Math.random()-.5)*jitter*(1-frac*0.5);
+      pts.push({ x: px, y: py });
+    }
+
+    const filCol = cfg.cols[fi % cfg.cols.length];
+
+    // Draw wide glow pass
+    ctx.save();
+    ctx.globalAlpha = 0.25 + enF * 0.2;
+    ctx.strokeStyle = filCol; ctx.lineWidth = 5;
+    ctx.shadowBlur  = 20; ctx.shadowColor = filCol;
+    ctx.beginPath(); pts.forEach((pt,i) => i===0 ? ctx.moveTo(pt.x,pt.y) : ctx.lineTo(pt.x,pt.y)); ctx.stroke();
+
+    // Draw bright core
+    ctx.globalAlpha = 0.8 + enF * 0.2;
+    ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1; ctx.shadowBlur = 6;
+    ctx.beginPath(); pts.forEach((pt,i) => i===0 ? ctx.moveTo(pt.x,pt.y) : ctx.lineTo(pt.x,pt.y)); ctx.stroke();
+    ctx.restore();
+  });
+}
+
+// ── GENERIC PARTICLE PLASMA (solar, fluorescent, fusion) ─────
+function drawParticlePlasma() {
+  ensureTrail();
+  const cfg = PLASMA_CONFIG[currentPlasma];
+  const enF = plasmaEnergy / 100;
+  const magF = plasmaMag / 100;
+
+  // Fade trail
+  trailCtx.fillStyle = `rgba(3,0,16,${0.08 + (1 - enF) * 0.06})`;
+  trailCtx.fillRect(0, 0, plasmaW, plasmaH);
+
+  const dt = 0.016;
+
+  plasmaParticles.forEach(p => {
+    // Magnetic Lorentz force: F = q(v × B)  — simplified 2D: Fperp = q·v·B
+    if (magF > 0.05) {
+      // B is out of screen; v × B rotates velocity in-plane
+      const omega = p.charge * magF * 3.0 * enF;
+      const cosO  = Math.cos(omega * dt);
+      const sinO  = Math.sin(omega * dt);
+      const nvx   = p.vx * cosO - p.vy * sinO;
+      const nvy   = p.vx * sinO + p.vy * cosO;
+      p.vx = nvx; p.vy = nvy;
+    }
+
+    // Random thermal kicks (simulates collisions)
+    const kickStr = enF * 0.3;
+    p.vx += (Math.random()-.5) * kickStr;
+    p.vy += (Math.random()-.5) * kickStr;
+
+    // Clamp to target speed
+    const spd = Math.sqrt(p.vx*p.vx + p.vy*p.vy);
+    const targetSpd = (1.5 + Math.random() * 1.5) * enF * 2;
+    if (spd > targetSpd * 1.5) { p.vx *= 0.95; p.vy *= 0.95; }
+    if (spd < 0.3) { p.vx += (Math.random()-.5)*0.4; p.vy += (Math.random()-.5)*0.4; }
+
+    p.x += p.vx; p.y += p.vy;
+
+    // Wrap-around at edges (plasma fills space)
+    if (p.x < -5)           p.x += plasmaW + 10;
+    if (p.x > plasmaW + 5)  p.x -= plasmaW + 10;
+    if (p.y < -5)           p.y += plasmaH + 10;
+    if (p.y > plasmaH + 5)  p.y -= plasmaH + 10;
+
+    // Draw glowing particle on trail canvas
+    const glowR = p.r * (3 + enF * 3);
+    trailCtx.save();
+    trailCtx.globalAlpha = 0.7 + enF * 0.3;
+    trailCtx.beginPath(); trailCtx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
+    const gg = trailCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowR);
+    gg.addColorStop(0,   '#ffffff');
+    gg.addColorStop(0.3, p.col);
+    gg.addColorStop(1,   'transparent');
+    trailCtx.fillStyle = gg; trailCtx.fill();
+    trailCtx.restore();
+  });
+
+  // Blit trail onto main canvas
+  plasmaCtx.clearRect(0, 0, plasmaW, plasmaH);
+  plasmaCtx.drawImage(trailCanvas, 0, 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// QUIZ SYSTEM
+// ═══════════════════════════════════════════════════════════════
+const allQuestions = [
+  {q:"What is the correct term for a solid turning directly into a gas without passing through liquid?",opts:["Condensation","Sublimation","Evaporation","Deposition"],ans:1},
+  {q:"At what temperature does water begin to melt?",opts:["100°C","50°C","0°C","-10°C"],ans:2},
+  {q:"At what temperature does water boil at normal atmospheric pressure?",opts:["0°C","50°C","75°C","100°C"],ans:3},
+  {q:"Why doesn't temperature change during a state change?",opts:["Energy is lost to the environment","Energy breaks intermolecular forces (latent heat)","Particles stop moving completely","Temperature always changes"],ans:1},
+  {q:"In a solid, what do the particles do?",opts:["Move randomly at high speed","Slide freely past each other","Vibrate around fixed positions","Flow like a liquid"],ans:2},
+  {q:"Which state of matter has the HIGHEST energy?",opts:["Solid","Liquid","Gas","Plasma"],ans:3},
+  {q:"Why can gases be compressed easily but liquids cannot?",opts:["Gas particles are heavier","Gas particles have large spaces between them","Liquid particles are lighter","Liquid particles move faster"],ans:1},
+  {q:"What happens to gas pressure when you reduce the container size?",opts:["Pressure decreases","Pressure stays the same","Pressure increases","Pressure becomes zero"],ans:2},
+  {q:"Which of these is an example of plasma?",opts:["Ice","Mercury","Steam","Lightning"],ans:3},
+  {q:"What is the process when a liquid turns into a gas BELOW its boiling point?",opts:["Sublimation","Condensation","Evaporation","Melting"],ans:2},
+  {q:"Which factor does NOT speed up evaporation?",opts:["Increasing surface area","Increasing airflow","Increasing temperature","Decreasing temperature"],ans:3},
+  {q:"What makes plasma physically different from a gas?",opts:["Plasma is colder","Plasma particles are ionised — electrons have been removed","Plasma has a fixed shape","Plasma cannot move"],ans:1},
+  {q:"What is the process called when a gas turns directly into a solid?",opts:["Sublimation","Evaporation","Deposition","Condensation"],ans:2},
+  {q:"Which state takes the shape of its container but has a fixed volume?",opts:["Solid","Liquid","Gas","Plasma"],ans:1},
+  {q:"What is latent heat?",opts:["Heat that raises temperature","Hidden energy used to break bonds during a state change","Heat released by burning","Energy of plasma particles"],ans:1},
+  {q:"Which of the following is NOT an example of plasma?",opts:["Aurora borealis","The Sun","Fluorescent light tube","Orange juice"],ans:3},
+  {q:"When a solid is heated to its melting point, what do the particles do?",opts:["They stop completely","They vibrate more vigorously and eventually slide past each other","They shrink","They lose all energy"],ans:1},
+  {q:"Reducing pressure on a liquid makes it boil at a _____ temperature.",opts:["Higher","Same","Lower","Fixed"],ans:2},
+  {q:"Which state of matter has NO fixed shape AND NO fixed volume?",opts:["Solid","Liquid","Gas","Solid and Liquid"],ans:2},
+  {q:"Which property do solids and liquids share that gases do not?",opts:["Fixed shape","Fixed volume — hard to compress","They both flow","No fixed volume"],ans:1},
+  {q:"Where is plasma found naturally in our solar system?",opts:["Inside an ice cube","In the Sun's corona","Inside still water","Inside a rock"],ans:1},
+  {q:"What is the process when a gas becomes a liquid?",opts:["Freezing","Sublimation","Condensation","Evaporation"],ans:2},
+  {q:"Which state has the most space between particles?",opts:["Solid","Liquid","Gas","They all have equal spacing"],ans:2},
+  {q:"What is the process when a liquid becomes a solid?",opts:["Boiling","Condensation","Melting","Freezing"],ans:3},
+  {q:"A gas in a syringe is compressed — what happens to pressure?",opts:["Decreases","Stays the same","Increases","Becomes zero"],ans:2},
+  {q:"What is the correct energy order from lowest to highest?",opts:["Solid, Gas, Liquid, Plasma","Liquid, Solid, Gas, Plasma","Solid, Liquid, Gas, Plasma","Plasma, Gas, Liquid, Solid"],ans:2},
+  {q:"Which state of matter conducts electricity due to free charged particles?",opts:["Solid","Liquid","Gas","Plasma"],ans:3},
+  {q:"Why do gas particles spread to fill their container?",opts:["They are attracted to container walls","They have high energy and move randomly in all directions","They have no mass","Gravity pulls them outward"],ans:1},
+  {q:"What happens to the temperature of water as it boils at 100°C?",opts:["It keeps rising steadily","It drops suddenly","It stays at 100°C until all water has evaporated","It fluctuates randomly"],ans:2},
+  {q:"Which two factors can increase the pressure of a gas in a sealed container?",opts:["Decrease temperature and increase volume","Increase temperature and decrease volume","Decrease temperature and decrease volume","Increase temperature and increase volume"],ans:1},
+];
+
+let quizMode     = 'infinite';
+let quizIndex    = 0;
+let quizScore    = 0;
+let quizQCount   = 10;
+let quizHistory  = [];
+let timerInterval, timerVal = 20, quizRunning = false;
+const shuffledIdxs = allQuestions.map((_,i) => i).sort(() => Math.random() - .5);
+
+function initQuizHome() {
+  ['quiz-home-area','quiz-setup','quiz-area','results-area'].forEach(id => {
+    const el = document.getElementById(id);
+    el.style.display = id === 'quiz-home-area' ? 'block' : 'none';
+  });
+  clearInterval(timerInterval); quizRunning = false;
+}
+function showCustomSetup() {
+  document.getElementById('quiz-home-area').style.display = 'none';
+  document.getElementById('quiz-setup').style.display    = 'block';
+}
+function changeQCount(d) {
+  quizQCount = Math.min(50, Math.max(1, quizQCount + d));
+  document.getElementById('q-count-display').textContent  = quizQCount;
+  document.getElementById('q-count-slider').value         = quizQCount;
+}
+function syncQCount(v) { quizQCount = parseInt(v); document.getElementById('q-count-display').textContent = v; }
+
+function startInfiniteQuiz() {
+  quizMode = 'infinite'; quizIndex = 0; quizScore = 0; quizHistory = [];
+  document.getElementById('quiz-home-area').style.display = 'none';
+  document.getElementById('quiz-area').style.display      = 'block';
+  document.getElementById('q-total-label').textContent    = '';
+  showNextQuestion();
+}
+function startCustomQuiz() {
+  quizMode = 'custom'; quizIndex = 0; quizScore = 0; quizHistory = [];
+  document.getElementById('quiz-setup').style.display  = 'none';
+  document.getElementById('quiz-area').style.display   = 'block';
+  document.getElementById('q-total-label').textContent = ` / ${quizQCount}`;
+  showNextQuestion();
+}
+
+function showNextQuestion() {
+  if (quizMode === 'custom' && quizIndex >= quizQCount) { showResults(); return; }
+  quizRunning = true;
+  const qi = shuffledIdxs[quizIndex % shuffledIdxs.length];
+  const q  = allQuestions[qi];
+  document.getElementById('q-num').textContent        = quizIndex + 1;
+  document.getElementById('live-score').textContent   = quizScore;
+  document.getElementById('question-text').textContent = q.q;
+
+  const grid      = document.getElementById('options-grid'); grid.innerHTML = '';
+  const optColors = ['#7C3AED','#06B6D4','#F59E0B','#EF4444'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button'); btn.className = 'option-btn';
+    btn.style.borderColor = optColors[i];
+    btn.innerHTML = `<span style="color:${optColors[i]};font-size:1.1rem;font-weight:900;margin-right:6px">${'ABCD'[i]}</span>${opt}`;
+    btn.onclick = () => answerQuestion(i, q);
+    grid.appendChild(btn);
+  });
+
+  clearInterval(timerInterval); timerVal = 20;
+  document.getElementById('timer-fill').style.width      = '100%';
+  document.getElementById('timer-fill').style.background = 'linear-gradient(90deg,var(--correct),var(--gas))';
+  timerInterval = setInterval(() => {
+    timerVal -= 0.1;
+    const pct = Math.max(0, (timerVal / 20) * 100);
+    document.getElementById('timer-fill').style.width = pct + '%';
+    if (pct < 40) document.getElementById('timer-fill').style.background = 'linear-gradient(90deg,#F59E0B,#EF4444)';
+    if (timerVal <= 0) { clearInterval(timerInterval); if (quizRunning) timeOut(q); }
+  }, 100);
+}
+
+function timeOut(q) {
+  quizRunning = false;
+  quizHistory.push({ q: q.q, userAns: -1, correct: q.ans, wasCorrect: false, opts: q.opts });
+  document.querySelectorAll('.option-btn').forEach((b, i) => { b.disabled = true; if (i === q.ans) b.classList.add('correct'); });
+  quizIndex++;
+  setTimeout(showNextQuestion, 1400);
+}
+
+function answerQuestion(choice, q) {
+  if (!quizRunning) return;
+  clearInterval(timerInterval); quizRunning = false;
+  const correct = choice === q.ans;
+  document.querySelectorAll('.option-btn').forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.ans)            b.classList.add('correct');
+    if (i === choice && !correct) b.classList.add('wrong');
+  });
+  if (correct) { quizScore++; document.getElementById('live-score').textContent = quizScore; confetti(); }
+  quizHistory.push({ q: q.q, userAns: choice, correct: q.ans, wasCorrect: correct, opts: q.opts });
+  quizIndex++;
+  setTimeout(showNextQuestion, 1300);
+}
+
+function stopQuiz() {
+  clearInterval(timerInterval); quizRunning = false;
+  if (quizHistory.length > 0) showResults(); else initQuizHome();
+}
+
+function showResults() {
+  clearInterval(timerInterval); quizRunning = false;
+  document.getElementById('quiz-area').style.display    = 'none';
+  document.getElementById('results-area').style.display = 'block';
+  const total   = quizHistory.length;
+  const correct = quizHistory.filter(h => h.wasCorrect).length;
+  document.getElementById('res-correct').textContent = correct;
+  document.getElementById('res-wrong').textContent   = total - correct;
+  const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+  document.getElementById('res-pct').textContent = pct + '%';
+
+  const list = document.getElementById('review-list'); list.innerHTML = '';
+  quizHistory.forEach((h, i) => {
+    const div = document.createElement('div');
+    div.className = 'review-item ' + (h.wasCorrect ? 'r-correct' : 'r-wrong');
+    div.innerHTML = `<strong>${h.wasCorrect ? '✅' : '❌'} Q${i+1}:</strong> ${h.q}${!h.wasCorrect ? `<br><em style="color:#FFD700">✅ Answer: ${h.opts[h.correct]}</em>` : ''}`;
+    list.appendChild(div);
+  });
+  if (pct >= 70) for (let i = 0; i < 6; i++) setTimeout(confetti, i * 150);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// THEORY HUB
+// ═══════════════════════════════════════════════════════════════
+function switchTheoryTab(tab, btn) {
+  document.querySelectorAll('#theory .tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#theory .tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('theory-' + tab).classList.add('active');
+  btn.classList.add('active');
+  setTimeout(() => {
+    if (tab === 'particles') { drawAllPD(); drawForceGraph(); }
+    if (tab === 'energy')    drawKEPE();
+  }, 30);
+}
+
+function initTheory() {
+  drawAllPD();
+  drawForceGraph();
+  calcLatentHeat();
+}
+
+// ── PARTICLE DIAGRAM CANVASES ─────────────────────────────────
+const pdRAF = {};
+function drawAllPD() {
+  ['solid','liquid','gas','plasma'].forEach(t => drawPDCanvas('pd-' + t, t));
+}
+
+function drawPDCanvas(id, type) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const W = canvas.offsetWidth || 220;
+  const H = 150;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const COL = { solid:'#3B82F6', liquid:'#06B6D4', gas:'#F59E0B', plasma:'#EF4444' };
+  const col = COL[type];
+  const R = 6;
+  const particles = [];
+
+  if (type === 'solid') {
+    // 5×5 lattice centred
+    const G = 5, SP = 22, ox = W/2 - (G-1)*SP/2, oy = H/2 - (G-1)*SP/2;
+    for (let r = 0; r < G; r++) for (let c = 0; c < G; c++)
+      particles.push({ ox: ox+c*SP, oy: oy+r*SP, x:0, y:0, ph: Math.random()*Math.PI*2 });
+  } else if (type === 'liquid') {
+    for (let i = 0; i < 22; i++) {
+      const sp = 0.25 + Math.random()*0.3, ang = Math.random()*Math.PI*2;
+      particles.push({ x: R+4+Math.random()*(W-R*2-8), y: H*0.35+Math.random()*(H*0.55), vx: Math.cos(ang)*sp, vy: Math.sin(ang)*sp });
+    }
+  } else if (type === 'gas') {
+    for (let i = 0; i < 14; i++) {
+      const sp = 1.2+Math.random()*1.4, ang = Math.random()*Math.PI*2;
+      particles.push({ x: R+Math.random()*(W-R*2), y: R+Math.random()*(H-R*2), vx: Math.cos(ang)*sp, vy: Math.sin(ang)*sp });
+    }
+  } else { // plasma — ions + electrons
+    for (let i = 0; i < 16; i++) {
+      const sp = 2.5+Math.random()*2.5, ang = Math.random()*Math.PI*2;
+      particles.push({ x: R+Math.random()*(W-R*2), y: R+Math.random()*(H-R*2), vx: Math.cos(ang)*sp, vy: Math.sin(ang)*sp, ion: i%3!==0 });
+    }
+  }
+
+  if (pdRAF[id]) cancelAnimationFrame(pdRAF[id]);
+  let t = 0;
+
+  function frame() {
+    t += 0.035;
+    ctx.clearRect(0, 0, W, H);
+
+    // Update
+    if (type === 'solid') {
+      particles.forEach(p => { p.x = p.ox + Math.sin(t+p.ph)*0.55; p.y = p.oy + Math.cos(t*1.3+p.ph)*0.55; });
+    } else if (type === 'liquid') {
+      particles.forEach(p => {
+        p.vy += 0.025; p.vx *= 0.993; p.vy *= 0.993;
+        p.vx += (Math.random()-.5)*0.045;
+        p.x += p.vx; p.y += p.vy;
+        if (p.y > H-R-3) { p.y=H-R-3; p.vy=-Math.abs(p.vy)*0.18; p.vx*=0.82; }
+        if (p.y < R+2) { p.y=R+2; p.vy=Math.abs(p.vy)*0.15; }
+        if (p.x < R+3) { p.x=R+3; p.vx=Math.abs(p.vx)*0.65; }
+        if (p.x > W-R-3) { p.x=W-R-3; p.vx=-Math.abs(p.vx)*0.65; }
+      });
+      // soft collision pass
+      for (let a = 0; a < particles.length-1; a++) {
+        for (let b = a+1; b < particles.length; b++) {
+          const pa=particles[a], pb=particles[b];
+          const dx=pb.x-pa.x, dy=pb.y-pa.y, d2=dx*dx+dy*dy;
+          if (d2<(R*2)*(R*2)&&d2>0.01) {
+            const d=Math.sqrt(d2), ov=(R*2-d)*0.5, nx=dx/d, ny=dy/d;
+            pa.x-=nx*ov; pa.y-=ny*ov; pb.x+=nx*ov; pb.y+=ny*ov;
+            const dv=( (pb.vx-pa.vx)*nx+(pb.vy-pa.vy)*ny );
+            if (dv<0) { const imp=dv*0.59; pa.vx+=imp*nx; pa.vy+=imp*ny; pb.vx-=imp*nx; pb.vy-=imp*ny; }
+          }
+        }
+      }
+    } else {
+      particles.forEach(p => {
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<R){p.x=R;p.vx=Math.abs(p.vx);}if(p.x>W-R){p.x=W-R;p.vx=-Math.abs(p.vx);}
+        if(p.y<R){p.y=R;p.vy=Math.abs(p.vy);}if(p.y>H-R){p.y=H-R;p.vy=-Math.abs(p.vy);}
+      });
+    }
+
+    // Draw force lines
+    if (type === 'solid') {
+      ctx.strokeStyle='rgba(59,130,246,0.3)'; ctx.lineWidth=1.2;
+      const G=5;
+      particles.forEach((p,i) => {
+        if(i%G<G-1){const q=particles[i+1]; ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();}
+        if(i<G*(G-1)){const q=particles[i+G]; ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();}
+      });
+      // distance label on first bond
+      const p0=particles[0], p1=particles[1];
+      ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.font='8px Nunito'; ctx.textAlign='center';
+      ctx.fillText('~0.3 nm',(p0.x+p1.x)/2,(p0.y+p1.y)/2-7);
+      // force label
+      ctx.fillStyle='rgba(59,130,246,0.7)'; ctx.textAlign='left';
+      ctx.fillText('Strong force',4,H-4);
+    }
+    if (type === 'liquid') {
+      for (let a=0;a<particles.length;a++) for (let b=a+1;b<particles.length;b++) {
+        const dx=particles[b].x-particles[a].x, dy=particles[b].y-particles[a].y, d=Math.sqrt(dx*dx+dy*dy);
+        if (d<34) { ctx.beginPath();ctx.moveTo(particles[a].x,particles[a].y);ctx.lineTo(particles[b].x,particles[b].y);ctx.strokeStyle=`rgba(6,182,212,${(1-d/34)*0.35})`;ctx.lineWidth=1;ctx.stroke(); }
+      }
+      ctx.fillStyle='rgba(6,182,212,0.65)'; ctx.font='8px Nunito'; ctx.textAlign='left';
+      ctx.fillText('Moderate force',4,H-4);
+      ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.textAlign='right';
+      ctx.fillText('~0.3–0.4 nm',W-4,H-4);
+    }
+    if (type === 'gas') {
+      ctx.fillStyle='rgba(245,158,11,0.6)'; ctx.font='8px Nunito'; ctx.textAlign='left';
+      ctx.fillText('~Negligible force',4,H-4);
+      ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.textAlign='right';
+      ctx.fillText('~3–10 nm apart',W-4,H-4);
+    }
+
+    // Draw particles
+    particles.forEach(p => {
+      if (type === 'plasma') {
+        const glow=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,R*2.8);
+        glow.addColorStop(0,'#fff'); glow.addColorStop(.35,col); glow.addColorStop(1,'transparent');
+        ctx.beginPath();ctx.arc(p.x,p.y,R*2.8,0,Math.PI*2);ctx.fillStyle=glow;ctx.fill();
+        // Ion / electron label
+        ctx.fillStyle='rgba(255,255,255,.85)'; ctx.font='bold 8px sans-serif'; ctx.textAlign='center';
+        ctx.fillText(p.ion?'⁺':'⁻',p.x,p.y+3);
+      } else {
+        ctx.beginPath(); ctx.arc(p.x,p.y,R,0,Math.PI*2); ctx.fillStyle=col; ctx.fill();
+      }
+    });
+    if (type === 'plasma') {
+      ctx.fillStyle='rgba(239,68,68,.7)'; ctx.font='8px Nunito'; ctx.textAlign='left';
+      ctx.fillText('⁺ ions + ⁻ electrons',4,H-4);
+      ctx.fillStyle='rgba(255,255,255,.4)'; ctx.textAlign='right';
+      ctx.fillText('Electromagnetic forces',W-4,H-4);
+    }
+
+    pdRAF[id] = requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+// ── FORCE vs DISTANCE GRAPH ───────────────────────────────────
+function drawForceGraph() {
+  const canvas = document.getElementById('force-graph');
+  if (!canvas) return;
+  const W = canvas.offsetWidth || 660, H = 210;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const PL=58, PR=18, PT=22, PB=42;
+  const gW=W-PL-PR, gH=H-PT-PB;
+  ctx.clearRect(0,0,W,H);
+
+  // Axes
+  const midY = PT+gH/2;
+  ctx.strokeStyle='rgba(255,255,255,0.25)'; ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(PL,PT);ctx.lineTo(PL,PT+gH);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(PL,midY);ctx.lineTo(PL+gW,midY);ctx.stroke();
+
+  // Zero dashed line
+  ctx.setLineDash([4,4]); ctx.strokeStyle='rgba(255,255,255,0.1)';
+  ctx.beginPath();ctx.moveTo(PL,midY);ctx.lineTo(PL+gW,midY);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Axis labels
+  ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.font='10px Nunito'; ctx.textAlign='center';
+  ctx.fillText('Separation distance →', PL+gW/2, H-4);
+  ctx.save();ctx.translate(13,PT+gH/2);ctx.rotate(-Math.PI/2);ctx.fillText('Force',0,0);ctx.restore();
+  ctx.fillStyle='rgba(239,68,68,0.7)'; ctx.textAlign='left'; ctx.font='9px Nunito';
+  ctx.fillText('↑ Repulsion', PL+5, PT+14);
+  ctx.fillStyle='rgba(59,130,246,0.7)';
+  ctx.fillText('↓ Attraction', PL+5, PT+gH-5);
+
+  // Lennard-Jones style curve using gradient stroke
+  const steps=300;
+  const pts=[];
+  for(let i=0;i<=steps;i++){
+    const rx=i/steps, r=0.68+rx*3.4;
+    const F=(12/Math.pow(r,13)-6/Math.pow(r,7))*0.28;
+    const px=PL+rx*gW, py=Math.max(PT+1,Math.min(PT+gH-1,midY-F*gH*0.45));
+    pts.push({px,py,F});
+  }
+  // Draw gradient line segment by segment
+  for(let i=1;i<pts.length;i++){
+    const {px:x1,py:y1,F:F1}=pts[i-1], {px:x2,py:y2}=pts[i];
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+    const r=Math.min(1,Math.max(0,(F1>0?F1:0)*4)), b=Math.min(1,Math.max(0,(F1<0?-F1:0)*4));
+    ctx.strokeStyle=`rgba(${Math.round(r*239+b*59)},${Math.round(b*130)},${Math.round(r*68+b*246)},0.9)`;
+    ctx.lineWidth=2.5; ctx.stroke();
+  }
+
+  // Equilibrium vertical dashed marker
+  const eqRx=0.195; const eqX=PL+eqRx*gW;
+  ctx.setLineDash([3,4]); ctx.strokeStyle='rgba(16,185,129,0.65)'; ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(eqX,PT);ctx.lineTo(eqX,PT+gH);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(16,185,129,0.9)'; ctx.font='9px Nunito'; ctx.textAlign='center';
+  ctx.fillText('Equilibrium',eqX,PT+11); ctx.fillText('(solid spacing)',eqX,PT+22);
+
+  // State zone markers at bottom
+  const zones=[{l:'Solid',x:0.14,c:'#3B82F6'},{l:'Liquid',x:0.24,c:'#06B6D4'},{l:'Gas',x:0.60,c:'#F59E0B'}];
+  zones.forEach(z=>{
+    const zx=PL+z.x*gW;
+    ctx.strokeStyle=z.c+'99'; ctx.lineWidth=1; ctx.setLineDash([2,3]);
+    ctx.beginPath();ctx.moveTo(zx,midY+8);ctx.lineTo(zx,PT+gH-2);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=z.c; ctx.font='bold 9px Nunito'; ctx.textAlign='center';
+    ctx.fillText(z.l,zx,PT+gH-2);
+  });
+}
+
+// ── KE vs PE BAR CHART ────────────────────────────────────────
+function drawKEPE() {
+  const canvas = document.getElementById('ke-pe-canvas');
+  if (!canvas) return;
+  const W = canvas.offsetWidth||680, H=320;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+
+  const stages=[
+    {label:'Solid\nHeating',  ke:0.14, pe:0.04, st:'solid'},
+    {label:'Melting\n(0°C)',   ke:0.24, pe:0.52, st:'melt'},
+    {label:'Liquid\nHeating', ke:0.52, pe:0.52, st:'liquid'},
+    {label:'Boiling\n(100°C)',ke:0.58, pe:0.94, st:'boil'},
+    {label:'Gas\nHeating',    ke:0.88, pe:0.94, st:'gas'},
+  ];
+
+  const PL=30, PR=10, PT=38, PB=48;
+  const gW=W-PL-PR, gH=H-PT-PB;
+  const bw=Math.min(52, gW/(stages.length*2.8));
+  const gap=(gW - stages.length*bw*2)/(stages.length+1);
+  const baseY=PT+gH;
+
+  // Y axis guide lines
+  ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+  [0.25,0.5,0.75,1].forEach(f=>{
+    const y=baseY-gH*f;
+    ctx.beginPath();ctx.moveTo(PL,y);ctx.lineTo(PL+gW,y);ctx.stroke();
+  });
+  ctx.setLineDash([]);
+
+  stages.forEach((s,i)=>{
+    const lx=PL+gap*(i+1)+i*bw*2;
+    const keH=gH*s.ke, peH=gH*s.pe;
+
+    // Latent heat highlight
+    if(s.st==='melt'||s.st==='boil'){
+      ctx.fillStyle='rgba(255,215,0,0.06)';
+      ctx.fillRect(lx-6,baseY-Math.max(keH,peH)-14,bw*2+12,Math.max(keH,peH)+18);
+      ctx.strokeStyle='rgba(255,215,0,0.35)'; ctx.lineWidth=1.2; ctx.setLineDash([3,3]);
+      ctx.strokeRect(lx-6,baseY-Math.max(keH,peH)-14,bw*2+12,Math.max(keH,peH)+18);
+      ctx.setLineDash([]);
+      ctx.fillStyle='rgba(255,215,0,0.9)'; ctx.font='bold 9px Nunito'; ctx.textAlign='center';
+      ctx.fillText('Latent',lx+bw,PT+10); ctx.fillText('Heat',lx+bw,PT+20);
+    }
+
+    // KE bar (orange, left)
+    ctx.fillStyle='#F59E0B';
+    ctx.fillRect(lx, baseY-keH, bw, keH);
+
+    // PE bar (purple, right)
+    ctx.fillStyle='#7C3AED';
+    ctx.fillRect(lx+bw+2, baseY-peH, bw, peH);
+
+    // Value labels inside bars
+    if(keH>16){ctx.fillStyle='rgba(255,255,255,.7)';ctx.font='8px Nunito';ctx.textAlign='center';ctx.fillText('KE',lx+bw/2,baseY-keH/2+4);}
+    if(peH>16){ctx.fillStyle='rgba(255,255,255,.7)';ctx.font='8px Nunito';ctx.textAlign='center';ctx.fillText('PE',lx+bw*1.5+2,baseY-peH/2+4);}
+
+    // Stage label (split on \n)
+    const lines=s.label.split('\n');
+    ctx.fillStyle='rgba(255,255,255,0.65)'; ctx.font='9px Nunito'; ctx.textAlign='center';
+    lines.forEach((ln,li)=>ctx.fillText(ln,lx+bw,baseY+14+li*12));
+  });
+
+  // Legend
+  ctx.fillStyle='#F59E0B'; ctx.fillRect(PL+5,5,12,12);
+  ctx.fillStyle='rgba(255,255,255,.65)'; ctx.font='10px Nunito'; ctx.textAlign='left';
+  ctx.fillText('Kinetic Energy (KE)',PL+21,15);
+  ctx.fillStyle='#7C3AED'; ctx.fillRect(PL+160,5,12,12);
+  ctx.fillStyle='rgba(255,255,255,.65)';
+  ctx.fillText('Potential Energy (PE)',PL+176,15);
+
+  // Y label
+  ctx.save();ctx.fillStyle='rgba(255,255,255,.35)';ctx.font='10px Nunito';ctx.translate(10,PT+gH/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillText('Energy',0,0);ctx.restore();
+}
+
+// ── LATENT HEAT CALCULATOR ────────────────────────────────────
+function calcLatentHeat() {
+  const L=parseFloat(document.getElementById('lh-type').value)||334000;
+  const m=parseFloat(document.getElementById('lh-mass').value)||0;
+  const Q=m*L;
+  document.getElementById('lh-result').textContent=`Q = ${Q.toLocaleString('en-GB',{maximumFractionDigits:0})} J = ${(Q/1000).toFixed(1)} kJ`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GRAPHS
+// ═══════════════════════════════════════════════════════════════
+function switchGraphTab(tab, btn) {
+  document.querySelectorAll('#graphs .tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#graphs .tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('graph-'+tab).classList.add('active');
+  btn.classList.add('active');
+  setTimeout(()=>{
+    if(tab==='heating') initHeating();
+    if(tab==='pv')      initPV();
+  },30);
+}
+
+function initGraphs() { initHeating(); }
+
+// ── HEATING CURVE ─────────────────────────────────────────────
+let heatPct=0, heatPlaying=false, heatRaf=null;
+
+const SEGS=[
+  {p0:0,  p1:20, t0:-20,t1:0,  st:'solid',  desc:'❄️ <strong>Solid Heating</strong> — KE increases, temperature rises. Particles vibrate more energetically.',  kePe:'KE ↑ &nbsp; PE constant'},
+  {p0:20, p1:40, t0:0,  t1:0,  st:'melt',   desc:'🧊 <strong>Melting (0°C)</strong> — Temperature <em>stays flat</em>! Energy goes into breaking bonds (Latent Heat of Fusion). KE constant, PE rising.', kePe:'KE constant &nbsp; PE ↑'},
+  {p0:40, p1:70, t0:0,  t1:100,st:'liquid', desc:'💧 <strong>Liquid Heating</strong> — KE increases again, temperature rises. Particles slide faster.',          kePe:'KE ↑ &nbsp; PE constant'},
+  {p0:70, p1:87, t0:100,t1:100,st:'boil',   desc:'♨️ <strong>Boiling (100°C)</strong> — Temperature <em>stays flat again</em>! Energy breaks liquid bonds (Latent Heat of Vaporisation).', kePe:'KE constant &nbsp; PE ↑'},
+  {p0:87, p1:100,t0:100,t1:145,st:'gas',    desc:'💨 <strong>Gas Heating</strong> — KE increases rapidly. Particles move very fast with negligible forces.', kePe:'KE ↑ &nbsp; PE constant'},
+];
+
+function getSeg(pct){ return SEGS.find(s=>pct>=s.p0&&pct<=s.p1)||SEGS[SEGS.length-1]; }
+function getTemp(pct){ const s=getSeg(pct); const f=(s.p1===s.p0)?0:(pct-s.p0)/(s.p1-s.p0); return s.t0+(s.t1-s.t0)*f; }
+
+function initHeating(){
+  const c=document.getElementById('heating-canvas'); if(!c)return;
+  c.width=c.offsetWidth||660; c.height=c.offsetHeight||400;
+  renderHeating(c,heatPct);
+}
+
+function scrubHeat(v){
+  heatPct=parseFloat(v);
+  document.getElementById('heat-pval').textContent=Math.round(heatPct);
+  const c=document.getElementById('heating-canvas'); if(c)renderHeating(c,heatPct);
+  const s=getSeg(heatPct);
+  document.getElementById('heat-info').innerHTML=
+    `${s.desc}<br><span style="color:#F59E0B">⚡ ${s.kePe}</span> &nbsp;|&nbsp; 🌡️ <strong>${Math.round(getTemp(heatPct))}°C</strong>`;
+}
+
+function toggleHeatPlay(){
+  heatPlaying=!heatPlaying;
+  document.getElementById('heat-play-btn').textContent=heatPlaying?'⏸ Pause':'▶ Animate';
+  if(heatPlaying) animHeat();
+  else if(heatRaf){cancelAnimationFrame(heatRaf);heatRaf=null;}
+}
+function resetHeat(){
+  heatPlaying=false; if(heatRaf){cancelAnimationFrame(heatRaf);heatRaf=null;}
+  document.getElementById('heat-play-btn').textContent='▶ Animate';
+  document.getElementById('heat-slider').value=0;
+  scrubHeat(0);
+}
+function animHeat(){
+  heatPct+=0.09; if(heatPct>100)heatPct=0;
+  document.getElementById('heat-slider').value=heatPct;
+  scrubHeat(heatPct);
+  if(heatPlaying)heatRaf=requestAnimationFrame(animHeat);
+}
+
+function renderHeating(canvas, pct){
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+  const PL=62,PR=22,PT=52,PB=52;
+  const gW=W-PL-PR, gH=H-PT-PB;
+  const Tmin=-20, Tmax=145;
+  const toX=p=>PL+(p/100)*gW;
+  const toY=t=>PT+gH-gH*((t-Tmin)/(Tmax-Tmin));
+  ctx.clearRect(0,0,W,H);
+
+  // Region bands
+  const bands=[
+    {p0:0, p1:20,col:'rgba(59,130,246,0.07)'},
+    {p0:20,p1:40,col:'rgba(255,215,0,0.055)'},
+    {p0:40,p1:70,col:'rgba(6,182,212,0.07)'},
+    {p0:70,p1:87,col:'rgba(255,215,0,0.055)'},
+    {p0:87,p1:100,col:'rgba(245,158,11,0.07)'},
+  ];
+  bands.forEach(b=>{
+    ctx.fillStyle=b.col;
+    ctx.fillRect(toX(b.p0),PT,toX(b.p1)-toX(b.p0),gH);
+  });
+
+  // Grid lines + temp labels
+  ctx.setLineDash([3,4]); ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=1;
+  [-20,-0,20,40,60,80,100,120,140].forEach(t=>{
+    const y=toY(t);
+    ctx.beginPath();ctx.moveTo(PL,y);ctx.lineTo(PL+gW,y);ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.38)';ctx.font='10px Nunito';ctx.textAlign='right';
+    ctx.fillText(t+'°',PL-4,y+4);
+  });
+  // Special dashes at 0 and 100
+  [0,100].forEach(t=>{
+    ctx.strokeStyle='rgba(255,215,0,0.25)'; ctx.lineWidth=1.5;
+    const y=toY(t);
+    ctx.beginPath();ctx.moveTo(PL,y);ctx.lineTo(PL+gW,y);ctx.stroke();
+  });
+  ctx.setLineDash([]);
+
+  // Axes
+  ctx.strokeStyle='rgba(255,255,255,0.3)'; ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(PL,PT);ctx.lineTo(PL,PT+gH);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(PL,PT+gH);ctx.lineTo(PL+gW,PT+gH);ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='11px Nunito';ctx.textAlign='center';
+  ctx.fillText('Heat Added (Time) →',PL+gW/2,H-5);
+  ctx.save();ctx.translate(12,PT+gH/2);ctx.rotate(-Math.PI/2);ctx.fillText('Temperature (°C)',0,0);ctx.restore();
+
+  // Heating curve line
+  const linePoints=[];
+  SEGS.forEach(s=>{linePoints.push({p:s.p0,t:s.t0});linePoints.push({p:s.p1,t:s.t1});});
+  const unique=linePoints.filter((pt,i)=>i===0||pt.p!==linePoints[i-1].p);
+  ctx.beginPath();
+  unique.forEach((pt,i)=>{ i===0?ctx.moveTo(toX(pt.p),toY(pt.t)):ctx.lineTo(toX(pt.p),toY(pt.t)); });
+  const lg=ctx.createLinearGradient(PL,0,PL+gW,0);
+  lg.addColorStop(0,'#3B82F6'); lg.addColorStop(0.2,'#3B82F6');
+  lg.addColorStop(0.21,'#FFD700'); lg.addColorStop(0.39,'#FFD700');
+  lg.addColorStop(0.4,'#06B6D4'); lg.addColorStop(0.7,'#06B6D4');
+  lg.addColorStop(0.71,'#FFD700'); lg.addColorStop(0.87,'#FFD700');
+  lg.addColorStop(0.88,'#F59E0B'); lg.addColorStop(1,'#F59E0B');
+  ctx.strokeStyle=lg; ctx.lineWidth=3.5; ctx.lineJoin='round'; ctx.stroke();
+
+  // State labels — positioned inside their band, above curve but below top
+  // Solid: label above the sloping line (curve goes from bottom-left)
+  // Melting/Boiling: label BELOW the flat line (inside the plateau band, no clash with brace above)
+  // Liquid/Gas: label above mid-band
+  const sLabels=[
+    {p:10, t:-9,  txt:'① SOLID',   c:'#3B82F6', above:true},
+    {p:55, t:52,  txt:'③ LIQUID',  c:'#06B6D4', above:true},
+    {p:93, t:130, txt:'⑤ GAS',     c:'#F59E0B', above:true},
+  ];
+  // Plateau labels drawn separately — inside the flat region, below the line
+  const plateauLabels=[
+    {p:30, t:0, txt:'② MELTING', c:'#FFD700'},
+    {p:78, t:100, txt:'④ BOILING', c:'#FFD700'},
+  ];
+
+  sLabels.forEach(sl=>{
+    const px=toX(sl.p), py=toY(sl.t)-18;
+    // Pill background
+    ctx.fillStyle=sl.c+'22';
+    ctx.beginPath();ctx.roundRect(px-28,py-11,56,16,4);ctx.fill();
+    ctx.strokeStyle=sl.c+'66';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle=sl.c; ctx.font='bold 9.5px Nunito'; ctx.textAlign='center';
+    ctx.fillText(sl.txt, px, py);
+  });
+
+  plateauLabels.forEach(pl=>{
+    const px=toX(pl.p), py=toY(pl.t)+22; // below the flat line
+    ctx.fillStyle=pl.c+'22';
+    ctx.beginPath();ctx.roundRect(px-32,py-11,64,16,4);ctx.fill();
+    ctx.strokeStyle=pl.c+'66';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle=pl.c; ctx.font='bold 9.5px Nunito'; ctx.textAlign='center';
+    ctx.fillText(pl.txt, px, py);
+  });
+
+  // Latent heat braces — draw ABOVE the flat line with text clearly above brace
+  const braceData=[
+    {p0:20,p1:40,t:0,  lbl1:'Latent Heat of Fusion',    lbl2:'(bonds breaking at 0°C)',   col:'#FFD700'},
+    {p0:70,p1:87,t:100,lbl1:'Latent Heat of Vaporisation',lbl2:'(bonds breaking at 100°C)',col:'#FFD700'},
+  ];
+  braceData.forEach(lb=>{
+    const x1=toX(lb.p0)+4, x2=toX(lb.p1)-4;
+    const braceY=toY(lb.t)-32; // well above the flat line
+    const midX=(x1+x2)/2;
+
+    // Horizontal brace line with end ticks
+    ctx.strokeStyle=lb.col; ctx.lineWidth=1.5; ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(x1,braceY+8);ctx.lineTo(x2,braceY+8);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x1,braceY+8);ctx.lineTo(x1,braceY+16);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x2,braceY+8);ctx.lineTo(x2,braceY+16);ctx.stroke();
+    // Arrowhead pointing down to line
+    ctx.beginPath();ctx.moveTo(midX,braceY+8);ctx.lineTo(midX,braceY+18);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(midX-4,braceY+14);ctx.lineTo(midX,braceY+20);ctx.lineTo(midX+4,braceY+14);ctx.stroke();
+
+    // Label background pill above the brace
+    const textY=braceY-2;
+    ctx.fillStyle='rgba(15,10,46,0.85)';
+    ctx.beginPath();ctx.roundRect(midX-70,textY-13,140,12,3);ctx.fill();
+    ctx.fillStyle=lb.col; ctx.font='bold 9px Nunito'; ctx.textAlign='center';
+    ctx.fillText(lb.lbl1, midX, textY);
+
+    ctx.fillStyle='rgba(15,10,46,0.75)';
+    ctx.beginPath();ctx.roundRect(midX-65,textY,130,11,3);ctx.fill();
+    ctx.fillStyle='rgba(255,215,0,0.6)'; ctx.font='8px Nunito';
+    ctx.fillText(lb.lbl2, midX, textY+9);
+  });
+
+  // Moving dot
+  if(pct>0){
+    const dx=toX(pct), dy=toY(getTemp(pct));
+    const seg=getSeg(pct);
+    const dc=seg.st==='solid'?'#3B82F6':seg.st==='melt'?'#FFD700':seg.st==='liquid'?'#06B6D4':seg.st==='boil'?'#FFD700':'#F59E0B';
+    // Crosshair
+    ctx.setLineDash([3,3]); ctx.strokeStyle=dc+'66'; ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(PL,dy);ctx.lineTo(dx,dy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(dx,dy);ctx.lineTo(dx,PT+gH);ctx.stroke();
+    ctx.setLineDash([]);
+    // Glow
+    const gl=ctx.createRadialGradient(dx,dy,0,dx,dy,15);
+    gl.addColorStop(0,dc); gl.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(dx,dy,15,0,Math.PI*2);ctx.fillStyle=gl;ctx.fill();
+    // Dot
+    ctx.beginPath();ctx.arc(dx,dy,6,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+    ctx.strokeStyle=dc; ctx.lineWidth=2.5; ctx.stroke();
+    // Temp readout on y axis
+    ctx.fillStyle=dc; ctx.font='bold 10px Nunito'; ctx.textAlign='right';
+    ctx.fillText(Math.round(getTemp(pct))+'°', PL-2, dy+4);
+  }
+}
+
+// ── PRESSURE–VOLUME GRAPH ─────────────────────────────────────
+let pvT=300, pvHoverX=-1, pvCan=null, pvCtx2=null;
+
+function initPV(){
+  pvCan=document.getElementById('pv-canvas'); if(!pvCan)return;
+  pvCan.width=pvCan.offsetWidth||660; pvCan.height=pvCan.offsetHeight||400;
+  pvCtx2=pvCan.getContext('2d');
+  pvCan.addEventListener('mousemove',e=>{
+    const r=pvCan.getBoundingClientRect();
+    pvHoverX=(e.clientX-r.left)*(pvCan.width/r.width);
+    renderPV();
+  });
+  pvCan.addEventListener('mouseleave',()=>{pvHoverX=-1;renderPV();});
+  pvCan.addEventListener('touchmove',e=>{
+    const r=pvCan.getBoundingClientRect();
+    pvHoverX=(e.touches[0].clientX-r.left)*(pvCan.width/r.width);
+    renderPV(); e.preventDefault();
+  },{passive:false});
+  renderPV();
+}
+
+function setPVTemp(v){
+  pvT=parseInt(v);
+  document.getElementById('pv-tval').textContent=pvT;
+  renderPV();
+}
+
+function renderPV(){
+  if(!pvCtx2||!pvCan)return;
+  const ctx=pvCtx2, W=pvCan.width, H=pvCan.height;
+  const PL=65,PR=22,PT=30,PB=52;
+  const gW=W-PL-PR, gH=H-PT-PB;
+  const Vmin=0.4,Vmax=5.2,Pmin=0,Pmax=5;
+  const toX=v=>PL+(v-Vmin)/(Vmax-Vmin)*gW;
+  const toY=p=>PT+gH-(p-Pmin)/(Pmax-Pmin)*gH;
+  const toV=px=>Vmin+(px-PL)/gW*(Vmax-Vmin);
+
+  ctx.clearRect(0,0,W,H);
+
+  // Grid
+  ctx.setLineDash([3,4]); ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=1;
+  [1,2,3,4,5].forEach(p=>{
+    ctx.beginPath();ctx.moveTo(PL,toY(p));ctx.lineTo(PL+gW,toY(p));ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.35)';ctx.font='10px Nunito';ctx.textAlign='right';
+    ctx.fillText(p,PL-4,toY(p)+4);
+  });
+  [1,2,3,4,5].forEach(v=>{
+    ctx.beginPath();ctx.moveTo(toX(v),PT);ctx.lineTo(toX(v),PT+gH);ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.35)';ctx.font='10px Nunito';ctx.textAlign='center';
+    ctx.fillText(v,toX(v),PT+gH+16);
+  });
+  ctx.setLineDash([]);
+
+  // Axes
+  ctx.strokeStyle='rgba(255,255,255,0.3)'; ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(PL,PT);ctx.lineTo(PL,PT+gH);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(PL,PT+gH);ctx.lineTo(PL+gW,PT+gH);ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='11px Nunito';ctx.textAlign='center';
+  ctx.fillText('Volume (V) — arbitrary units →',PL+gW/2,H-5);
+  ctx.save();ctx.translate(13,PT+gH/2);ctx.rotate(-Math.PI/2);ctx.fillText('Pressure (P) — arbitrary units ↑',0,0);ctx.restore();
+  ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='9px Nunito';ctx.textAlign='left';
+  ctx.fillText('P',PL-14,PT+6); ctx.textAlign='center'; ctx.fillText('V',PL+gW+10,PT+gH+6);
+
+  // Multiple isotherms
+  const temps=[150,225,300,420,600];
+  const colMap={150:'rgba(59,130,246,0.5)',225:'rgba(124,58,237,0.5)',300:'#06B6D4',420:'rgba(245,158,11,0.6)',600:'rgba(239,68,68,0.55)'};
+  temps.forEach(T=>{
+    const k=T*0.0065;
+    const isCur=T===pvT;
+    ctx.beginPath();
+    let started=false;
+    for(let vi=0;vi<=300;vi++){
+      const v=Vmin+vi*(Vmax-Vmin)/300, p=k/v;
+      if(p<Pmin||p>Pmax){started=false;continue;}
+      const px=toX(v),py=toY(p);
+      if(!started){ctx.moveTo(px,py);started=true;}else ctx.lineTo(px,py);
+    }
+    ctx.strokeStyle=isCur?'#06B6D4':(colMap[T]||'rgba(180,120,255,0.3)');
+    ctx.lineWidth=isCur?3:1.4;
+    if(isCur){ctx.shadowBlur=10;ctx.shadowColor='#06B6D4';}
+    ctx.stroke(); ctx.shadowBlur=0;
+    // Isotherm label
+    const labelV=Vmax*0.88, labelP=(k/labelV);
+    if(labelP>Pmin&&labelP<Pmax){
+      ctx.fillStyle=isCur?'#06B6D4':(colMap[T]||'rgba(180,120,255,0.6)');
+      ctx.font=isCur?'bold 11px Nunito':'9px Nunito'; ctx.textAlign='left';
+      ctx.fillText(`T=${T}K`,toX(labelV)+3,toY(labelP));
+    }
+  });
+
+  // "Higher T" annotation arrow
+  ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.font='9px Nunito'; ctx.textAlign='left';
+  ctx.fillText('Higher T →',PL+gW*0.55,PT+18);
+
+  // Hover probe
+  if(pvHoverX>PL&&pvHoverX<PL+gW){
+    const V=toV(pvHoverX);
+    if(V>Vmin&&V<Vmax){
+      const k=pvT*0.0065, P=k/V;
+      if(P>=Pmin&&P<=Pmax){
+        const px=toX(V),py=toY(P);
+        ctx.setLineDash([3,3]); ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.lineWidth=1;
+        ctx.beginPath();ctx.moveTo(PL,py);ctx.lineTo(px,py);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px,PT+gH);ctx.stroke();
+        ctx.setLineDash([]);
+        // Point
+        ctx.beginPath();ctx.arc(px,py,7,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+        ctx.strokeStyle='#06B6D4'; ctx.lineWidth=2.5; ctx.stroke();
+        // Axis intercepts
+        ctx.fillStyle='#06B6D4'; ctx.font='bold 10px Nunito'; ctx.textAlign='right';
+        ctx.fillText(P.toFixed(2),PL-2,py+4);
+        ctx.textAlign='center'; ctx.fillText(V.toFixed(2),px,PT+gH+16);
+        // Tooltip box
+        const txt=`P = ${P.toFixed(2)} | V = ${V.toFixed(2)} | PV = ${(P*V).toFixed(2)} (k = ${(pvT*0.0065).toFixed(2)})`;
+        document.getElementById('pv-readout').innerHTML=`<strong>📍 Probe:</strong> ${txt}`;
+        // PV = k label near point
+        ctx.fillStyle='rgba(255,255,255,0.6)'; ctx.font='9px Nunito'; ctx.textAlign='left';
+        ctx.fillText('PV='+((P*V).toFixed(2)),px+10,py-6);
+      }
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LEARN SECTION — STATIC HEATING CURVE
+// ═══════════════════════════════════════════════════════════════
+function drawLearnHeatingCurve() {
+  const canvas = document.getElementById('learn-heating-curve');
+  if (!canvas) return;
+  const W = canvas.offsetWidth || 860;
+  const H = 320;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const PL=58,PR=20,PT=44,PB=36, gW=W-PL-PR, gH=H-PT-PB;
+  const Tmin=-20,Tmax=145;
+  const toX=p=>PL+(p/100)*gW;
+  const toY=t=>PT+gH-gH*((t-Tmin)/(Tmax-Tmin));
+
+  ctx.clearRect(0,0,W,H);
+
+  // Region shading
+  const bands=[{p0:0,p1:20,col:'rgba(59,130,246,0.08)'},{p0:20,p1:40,col:'rgba(255,215,0,0.06)'},{p0:40,p1:70,col:'rgba(6,182,212,0.08)'},{p0:70,p1:87,col:'rgba(255,215,0,0.06)'},{p0:87,p1:100,col:'rgba(245,158,11,0.08)'}];
+  bands.forEach(b=>{ctx.fillStyle=b.col;ctx.fillRect(toX(b.p0),PT,toX(b.p1)-toX(b.p0),gH);});
+
+  // Gridlines
+  ctx.setLineDash([3,4]);ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.lineWidth=1;
+  [-20,0,20,40,60,80,100,120,140].forEach(t=>{const y=toY(t);ctx.beginPath();ctx.moveTo(PL,y);ctx.lineTo(PL+gW,y);ctx.stroke();ctx.fillStyle='rgba(255,255,255,0.35)';ctx.font='9px Nunito';ctx.textAlign='right';ctx.fillText(t+'°',PL-3,y+3);});
+  ctx.setLineDash([]);
+
+  // Axes
+  ctx.strokeStyle='rgba(255,255,255,0.28)';ctx.lineWidth=1.8;
+  ctx.beginPath();ctx.moveTo(PL,PT);ctx.lineTo(PL,PT+gH);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(PL,PT+gH);ctx.lineTo(PL+gW,PT+gH);ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,0.45)';ctx.font='10px Nunito';ctx.textAlign='center';
+  ctx.fillText('Time / Heat Added →',PL+gW/2,H-4);
+  ctx.save();ctx.translate(10,PT+gH/2);ctx.rotate(-Math.PI/2);ctx.fillText('Temperature (°C)',0,0);ctx.restore();
+
+  // Curve segments
+  const segs=[{p0:0,p1:20,t0:-20,t1:0},{p0:20,p1:40,t0:0,t1:0},{p0:40,p1:70,t0:0,t1:100},{p0:70,p1:87,t0:100,t1:100},{p0:87,p1:100,t0:100,t1:145}];
+  const segCols=['#3B82F6','#FFD700','#06B6D4','#FFD700','#F59E0B'];
+  segs.forEach((s,i)=>{
+    ctx.beginPath();ctx.moveTo(toX(s.p0),toY(s.t0));ctx.lineTo(toX(s.p1),toY(s.t1));
+    ctx.strokeStyle=segCols[i];ctx.lineWidth=3;ctx.lineJoin='round';ctx.stroke();
+  });
+
+  // Step badges: numbered circles on the sloping parts, labels ABOVE curve
+  const stepInfo=[
+    {p:10,t:-9, num:'①',lbl:'Solid Heating',      c:'#3B82F6', offY:-22},
+    {p:55,t:52, num:'③',lbl:'Liquid Heating',     c:'#06B6D4', offY:-22},
+    {p:93,t:128,num:'⑤',lbl:'Gas Heating',        c:'#F59E0B', offY:-22},
+  ];
+  // Plateau step badges drawn BELOW the flat line to stay clear of braces
+  const plateauInfo=[
+    {p:30,t:0,  num:'②',lbl:'Melting  0°C',      c:'#FFD700', offY:26},
+    {p:78,t:100,num:'④',lbl:'Boiling  100°C',    c:'#FFD700', offY:26},
+  ];
+
+  [...stepInfo,...plateauInfo].forEach(s=>{
+    const x=toX(s.p), y=toY(s.t)+s.offY;
+    // Circle badge
+    ctx.beginPath();ctx.arc(x,y,9,0,Math.PI*2);ctx.fillStyle=s.c;ctx.fill();
+    ctx.fillStyle='#000';ctx.font='bold 8px Nunito';ctx.textAlign='center';ctx.fillText(s.num,x,y+3);
+    // Label with background pill
+    const lw=ctx.measureText(s.lbl).width+14;
+    ctx.fillStyle=s.c+'25';
+    ctx.beginPath();ctx.roundRect(x-lw/2,y+11,lw,13,4);ctx.fill();
+    ctx.strokeStyle=s.c+'55';ctx.lineWidth=0.8;ctx.stroke();
+    ctx.fillStyle=s.c;ctx.font='7.5px Nunito';ctx.fillText(s.lbl,x,y+21);
+  });
+
+  // Latent heat braces — positioned well above the 0°C and 100°C flat lines
+  [{p0:20,p1:40,t:0,lbl1:'Latent Heat of Fusion',lbl2:'bonds break at 0°C'},{p0:70,p1:87,t:100,lbl1:'Latent Heat of Vaporisation',lbl2:'bonds break at 100°C'}].forEach(lb=>{
+    const x1=toX(lb.p0)+3,x2=toX(lb.p1)-3,braceY=toY(lb.t)-28,midX=(x1+x2)/2;
+    ctx.strokeStyle='rgba(255,215,0,0.6)';ctx.lineWidth=1.3;ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(x1,braceY+6);ctx.lineTo(x2,braceY+6);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x1,braceY+6);ctx.lineTo(x1,braceY+13);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x2,braceY+6);ctx.lineTo(x2,braceY+13);ctx.stroke();
+    // Arrow pointing down to the flat line
+    ctx.beginPath();ctx.moveTo(midX,braceY+6);ctx.lineTo(midX,braceY+15);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(midX-3,braceY+11);ctx.lineTo(midX,braceY+17);ctx.lineTo(midX+3,braceY+11);ctx.stroke();
+    // Label pill above brace
+    ctx.fillStyle='rgba(8,5,30,0.88)';
+    ctx.beginPath();ctx.roundRect(midX-62,braceY-12,124,11,3);ctx.fill();
+    ctx.fillStyle='rgba(255,215,0,0.95)';ctx.font='bold 8px Nunito';ctx.textAlign='center';
+    ctx.fillText(lb.lbl1,midX,braceY-3);
+    ctx.fillStyle='rgba(8,5,30,0.75)';
+    ctx.beginPath();ctx.roundRect(midX-50,braceY-1,100,10,3);ctx.fill();
+    ctx.fillStyle='rgba(255,215,0,0.55)';ctx.font='7px Nunito';
+    ctx.fillText(lb.lbl2,midX,braceY+7);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LAB — MINI PV GRAPH (called from labLoop)
+// ═══════════════════════════════════════════════════════════════
+function updateLabMiniPV(state, temp, sizeRatio) {
+  const canvas = document.getElementById('lab-pv-mini');
+  if (!canvas) return;
+  const W = canvas.offsetWidth || 280, H = 200;
+  if (canvas.width !== W) { canvas.width = W; canvas.height = H; }
+  const ctx = canvas.getContext('2d');
+
+  ctx.clearRect(0,0,W,H);
+
+  const PL=36,PR=12,PT=14,PB=30, gW=W-PL-PR, gH=H-PT-PB;
+  const Vmin=0.3,Vmax=5,Pmin=0,Pmax=5;
+  const toX=v=>PL+(v-Vmin)/(Vmax-Vmin)*gW;
+  const toY=p=>PT+gH-(p-Pmin)/(Pmax-Pmin)*gH;
+
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.lineWidth=1;ctx.setLineDash([2,3]);
+  [1,2,3,4].forEach(p=>{ctx.beginPath();ctx.moveTo(PL,toY(p));ctx.lineTo(PL+gW,toY(p));ctx.stroke();});
+  [1,2,3,4].forEach(v=>{ctx.beginPath();ctx.moveTo(toX(v),PT);ctx.lineTo(toX(v),PT+gH);ctx.stroke();});
+  ctx.setLineDash([]);
+
+  // Axes
+  ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(PL,PT);ctx.lineTo(PL,PT+gH);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(PL,PT+gH);ctx.lineTo(PL+gW,PT+gH);ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='8px Nunito';
+  ctx.textAlign='center';ctx.fillText('V →',PL+gW/2,H-2);
+  ctx.save();ctx.translate(7,PT+gH/2);ctx.rotate(-Math.PI/2);ctx.fillText('P ↑',0,0);ctx.restore();
+
+  if (state === 'solid' || state === 'melt') {
+    // Solid/melting: not really a gas — show a "N/A" message
+    ctx.fillStyle='rgba(59,130,246,0.4)';ctx.font='bold 10px Nunito';ctx.textAlign='center';
+    ctx.fillText('Solid: fixed volume',W/2,PT+gH/2-6);
+    ctx.fillText('P–V law N/A',W/2,PT+gH/2+10);
+    document.getElementById('lab-pv-state').textContent = state==='melt' ? '🔥 MELTING' : '🧊 SOLID';
+    document.getElementById('lab-pv-info').textContent = 'Solids have fixed volume and negligible compressibility — Boyle\'s Law applies to gases only.';
+    document.getElementById('lab-mini-pressure').textContent='—';
+    document.getElementById('lab-mini-volume').textContent='—';
+    document.getElementById('lab-mini-pv').textContent='—';
+  } else {
+    // Gas or liquid: show isotherms
+    const T_K = Math.max(10, temp + 273); // convert °C to K
+    const V_current = sizeRatio * 3.5; // volume from container size (arbitrary units)
+    const k = T_K * 0.008;
+    const P_current = k / V_current;
+
+    // Draw isotherms (lighter reference curves)
+    [150,300,450].forEach(T=>{
+      const ki=T*0.008;
+      ctx.beginPath();let started=false;
+      for(let vi=0;vi<=200;vi++){
+        const v=Vmin+vi*(Vmax-Vmin)/200, p=ki/v;
+        if(p<Pmin||p>Pmax){started=false;continue;}
+        const px=toX(v),py=toY(p);
+        if(!started){ctx.moveTo(px,py);started=true;}else ctx.lineTo(px,py);
+      }
+      ctx.strokeStyle=T===300?'rgba(124,58,237,0.4)':'rgba(124,58,237,0.2)';
+      ctx.lineWidth=1;ctx.stroke();
+    });
+
+    // Draw active isotherm highlighted
+    const col = state==='liquid'?'#06B6D4':'#F59E0B';
+    ctx.beginPath();let started=false;
+    for(let vi=0;vi<=200;vi++){
+      const v=Vmin+vi*(Vmax-Vmin)/200, p=k/v;
+      if(p<Pmin||p>Pmax){started=false;continue;}
+      const px=toX(v),py=toY(p);
+      if(!started){ctx.moveTo(px,py);started=true;}else ctx.lineTo(px,py);
+    }
+    ctx.strokeStyle=col;ctx.lineWidth=2;ctx.shadowBlur=6;ctx.shadowColor=col;ctx.stroke();ctx.shadowBlur=0;
+
+    // Current state dot
+    const dotX=toX(V_current), dotY=toY(Math.max(Pmin+0.05,Math.min(Pmax-0.05,P_current)));
+    const gl=ctx.createRadialGradient(dotX,dotY,0,dotX,dotY,10);
+    gl.addColorStop(0,col);gl.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(dotX,dotY,10,0,Math.PI*2);ctx.fillStyle=gl;ctx.fill();
+    ctx.beginPath();ctx.arc(dotX,dotY,4,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+    ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.stroke();
+
+    // Update readout elements
+    const Pshow = Math.min(Pmax, P_current);
+    document.getElementById('lab-pv-state').textContent = state==='liquid'?'💧 LIQUID':'💨 GAS';
+    document.getElementById('lab-pv-info').textContent = `T = ${Math.round(temp)}°C (${T_K}K) · Boyle's Law: PV = ${(Pshow*V_current).toFixed(2)}`;
+    document.getElementById('lab-mini-pressure').textContent = Pshow.toFixed(2)+' au';
+    document.getElementById('lab-mini-volume').textContent = V_current.toFixed(2)+' au';
+    document.getElementById('lab-mini-temp').textContent = Math.round(temp)+'°C';
+    document.getElementById('lab-mini-pv').textContent = (Pshow*V_current).toFixed(2);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ENTHALPY LAB
+// ═══════════════════════════════════════════════════════════════
+const ENTH_DATA = {
+  melt:     { label:'Melting (Ice→Water)',    dh:+6.01,   L:334000,    Lname:'Latent Heat of Fusion',       endo:true,  from:'solid', to:'liquid', fromT:0,  toT:20,  col:'#3B82F6' },
+  freeze:   { label:'Freezing (Water→Ice)',   dh:-6.01,   L:334000,    Lname:'Latent Heat of Fusion',       endo:false, from:'liquid',to:'solid',  fromT:20, toT:0,   col:'#06B6D4' },
+  boil:     { label:'Boiling (Water→Steam)',  dh:+40.7,   L:2260000,   Lname:'Latent Heat of Vaporisation', endo:true,  from:'liquid',to:'gas',    fromT:100,toT:120, col:'#F59E0B' },
+  condense: { label:'Condensation (Steam→Water)',dh:-40.7, L:2260000,  Lname:'Latent Heat of Vaporisation', endo:false, from:'gas',  to:'liquid', fromT:120,toT:100, col:'#06B6D4' },
+  sublime:  { label:'Sublimation (Ice→Gas)',  dh:+46.7,   L:2838000,   Lname:'Latent Heat of Sublimation',  endo:true,  from:'solid', to:'gas',    fromT:0,  toT:120, col:'#7C3AED' },
+  deposit:  { label:'Deposition (Gas→Solid)', dh:-46.7,   L:2838000,   Lname:'Latent Heat of Sublimation',  endo:false, from:'gas',  to:'solid',  fromT:120,toT:0,   col:'#EF4444' },
+};
+
+let currentEnthChange = 'melt';
+let enthMass = 1.0;
+
+function initEnthalpyLab() {
+  selectEnthChange('melt', document.querySelector('.enth-sel-btn.active'));
+}
+
+function selectEnthChange(key, btn) {
+  currentEnthChange = key;
+  document.querySelectorAll('.enth-sel-btn').forEach(b => {
+    b.style.opacity = '0.6';
+    b.style.borderColor = 'rgba(124,58,237,0.3)';
+  });
+  if (btn) { btn.style.opacity = '1'; btn.style.borderColor = '#FF6600'; }
+  updateEnthalpyGraph();
+  updateEnthalpyCalc();
+}
+
+function setEnthMass(v) {
+  enthMass = Math.max(0.1, Math.min(20, parseFloat(v)||1));
+  document.getElementById('enth-mass-slider').value = enthMass;
+  document.getElementById('enth-mass-display').textContent = enthMass.toFixed(1);
+  updateEnthalpyCalc();
+  updateEnthalpyGraph(); // graph bar height changes with mass
+}
+
+function adjustEnthMass(delta) {
+  setEnthMass(enthMass + delta);
+}
+
+function updateEnthalpyCalc() {
+  const d = ENTH_DATA[currentEnthChange];
+  const Q = enthMass * d.L;
+  document.getElementById('enth-q-result').textContent = Q >= 1e6
+    ? (Q/1e6).toFixed(3)+' MJ'
+    : Q.toLocaleString('en-GB',{maximumFractionDigits:0})+' J';
+  document.getElementById('enth-q-kj').textContent = '= '+(Q/1000).toFixed(1)+' kJ';
+  document.getElementById('enth-q-formula').textContent = `Q = ${enthMass.toFixed(1)} kg × ${d.L.toLocaleString()} J/kg`;
+  document.getElementById('enth-L-val').textContent = d.L.toLocaleString()+' J/kg';
+  document.getElementById('enth-L-name').textContent = d.Lname;
+  const sign = d.endo ? '+' : '−';
+  document.getElementById('enth-dh').textContent = `ΔH = ${sign}${Math.abs(d.dh).toFixed(2)} kJ/mol`;
+  document.getElementById('enth-dh').style.color = d.endo ? '#F59E0B' : '#10B981';
+  document.getElementById('enth-type-label').textContent = d.endo
+    ? '🔺 Endothermic — absorbs energy from surroundings'
+    : '🔻 Exothermic — releases energy to surroundings';
+  document.getElementById('enth-type-label').style.color = d.endo ? '#F59E0B' : '#10B981';
+}
+
+function updateEnthalpyGraph() {
+  const canvas = document.getElementById('enthalpy-canvas');
+  if (!canvas) return;
+  const W = canvas.offsetWidth || 520, H = 320;
+  canvas.width = W; canvas.height = H;
+  drawEnthalpyGraph(canvas, currentEnthChange, enthMass);
+
+  const d = ENTH_DATA[currentEnthChange];
+  const Q = enthMass * d.L;
+  const arrow = d.endo ? '→ energy IN →' : '← energy OUT ←';
+  document.getElementById('enthalpy-desc').innerHTML =
+    `<strong style="color:${d.endo?'#F59E0B':'#10B981'}">${d.endo?'🔺 Endothermic':'🔻 Exothermic'}: ${d.label}</strong><br>` +
+    `ΔH = ${d.endo?'+':'−'}${Math.abs(d.dh).toFixed(2)} kJ/mol &nbsp;|&nbsp; ${arrow}<br>` +
+    `For <strong>${enthMass.toFixed(1)} kg</strong> of substance: Q = <strong style="color:#FF6600">${(Q/1000).toFixed(1)} kJ</strong><br>` +
+    `<span style="color:var(--muted);font-size:.8rem">The bar height shows the total energy transferred — drag the mass slider to see it scale!</span>`;
+}
+
+function drawEnthalpyGraph(canvas, key, mass) {
+  const d = ENTH_DATA[key];
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  const PL=60, PR=30, PT=30, PB=50;
+  const gW=W-PL-PR, gH=H-PT-PB;
+
+  // Y axis represents energy level (arbitrary units, scaled by Q)
+  // Show reactant level, product level, and the ΔH arrow
+  const Q = mass * d.L;
+  const maxQ = 20 * 2838000; // max possible Q at mass=20, sublimation
+  const Q_norm = Math.min(1, Q / (5 * 334000)); // normalise for visual
+
+  const reactantY = d.endo ? PT + gH * 0.75 : PT + gH * 0.25;
+  const productY  = d.endo ? PT + gH * (0.75 - Q_norm * 0.5) : PT + gH * (0.25 + Q_norm * 0.5);
+
+  // Clamp
+  const rY = Math.max(PT+5, Math.min(PT+gH-20, reactantY));
+  const pY = Math.max(PT+5, Math.min(PT+gH-20, productY));
+
+  const midX = PL + gW/2;
+  const rX1=PL+20, rX2=midX-20, pX1=midX+20, pX2=PL+gW-10;
+
+  // Background gradient
+  const bg = ctx.createLinearGradient(0,PT,0,PT+gH);
+  bg.addColorStop(0,'rgba(255,215,0,0.05)'); bg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=bg; ctx.fillRect(PL,PT,gW,gH);
+
+  // Y axis
+  ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(PL,PT);ctx.lineTo(PL,PT+gH);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(PL,PT+gH);ctx.lineTo(PL+gW,PT+gH);ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='9px Nunito';
+  ctx.save();ctx.translate(14,PT+gH/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillText('Energy (Enthalpy H)',0,0);ctx.restore();
+  ctx.textAlign='center';ctx.fillText('Reaction Progress →',PL+gW/2,H-5);
+
+  // Reactant platform
+  ctx.strokeStyle=d.col;ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(rX1,rY);ctx.lineTo(rX2,rY);ctx.stroke();
+  ctx.fillStyle=d.col;ctx.font='bold 10px Nunito';ctx.textAlign='center';
+  ctx.fillText(d.from.toUpperCase(),((rX1+rX2)/2),rY-8);
+
+  // Product platform
+  ctx.strokeStyle=d.endo?'#F59E0B':'#10B981';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(pX1,pY);ctx.lineTo(pX2,pY);ctx.stroke();
+  ctx.fillStyle=d.endo?'#F59E0B':'#10B981';ctx.font='bold 10px Nunito';ctx.textAlign='center';
+  ctx.fillText(d.to.toUpperCase(),((pX1+pX2)/2),pY-8);
+
+  // Dashed connector at top
+  ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(rX2,rY);ctx.lineTo(pX1,pY);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // ΔH arrow (vertical, between rY and pY)
+  const arrX = PL + gW * 0.82;
+  const arrowCol = d.endo ? '#F59E0B' : '#10B981';
+  const aTop = Math.min(rY,pY)+4, aBot = Math.max(rY,pY)-4;
+  if (aBot-aTop > 8) {
+    ctx.strokeStyle=arrowCol;ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(arrX,aTop);ctx.lineTo(arrX,aBot);ctx.stroke();
+    // arrowhead
+    const tip = d.endo ? aTop : aBot;
+    const dir = d.endo ? -1 : 1;
+    ctx.beginPath();ctx.moveTo(arrX,tip);ctx.lineTo(arrX-5,tip+dir*8);ctx.lineTo(arrX+5,tip+dir*8);ctx.closePath();
+    ctx.fillStyle=arrowCol;ctx.fill();
+    // ΔH label
+    ctx.fillStyle=arrowCol;ctx.font='bold 10px Nunito';ctx.textAlign='left';
+    ctx.fillText(`ΔH=${d.endo?'+':'−'}${Math.abs(d.dh).toFixed(1)}`,arrX+8,(aTop+aBot)/2+4);
+  }
+
+  // Q value bar (filled, scales with mass)
+  const barW = 28;
+  const barX = PL + gW * 0.47;
+  const barTop = Math.min(rY,pY), barH_px = Math.abs(rY-pY);
+  if (barH_px > 4) {
+    const barGrad = ctx.createLinearGradient(0,barTop,0,barTop+barH_px);
+    barGrad.addColorStop(0, d.endo?'rgba(245,158,11,0.6)':'rgba(16,185,129,0.6)');
+    barGrad.addColorStop(1, d.endo?'rgba(245,158,11,0.1)':'rgba(16,185,129,0.1)');
+    ctx.fillStyle=barGrad;
+    ctx.fillRect(barX-barW/2, barTop, barW, barH_px);
+    ctx.strokeStyle=d.endo?'rgba(245,158,11,0.5)':'rgba(16,185,129,0.5)';ctx.lineWidth=1;
+    ctx.strokeRect(barX-barW/2, barTop, barW, barH_px);
+    // Q label
+    const Qkj=(Q/1000).toFixed(0);
+    ctx.fillStyle='rgba(255,255,255,0.85)';ctx.font='bold 9px Nunito';ctx.textAlign='center';
+    ctx.fillText(`Q=${Qkj}kJ`,barX,(barTop+barTop+barH_px)/2+4);
+  }
+
+  // Surroundings label
+  ctx.fillStyle=d.endo?'rgba(245,158,11,0.6)':'rgba(16,185,129,0.6)';
+  ctx.font='9px Nunito';ctx.textAlign='center';
+  ctx.fillText(d.endo?'← absorbs from surroundings →':'← releases to surroundings →', PL+gW/2, PT+gH+14);
+
+  // Reference lines
+  ctx.setLineDash([2,3]);ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(PL,rY);ctx.lineTo(PL+gW,rY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(PL,pY);ctx.lineTo(PL+gW,pY);ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PATCH labLoop to call updateLabMiniPV
+// ═══════════════════════════════════════════════════════════════
+// Override the lab state label section to also update the mini PV
+const _origLabLoop_pvPatch = true; // flag so we know it's applied
+
+// ── CONFETTI ────────────────────────────────────────────────
+function confetti() {
+  const cols = ['#7C3AED','#06B6D4','#F59E0B','#EF4444','#10B981','#FFD700','#FF6600','#EC4899'];
+  for (let i = 0; i < 18; i++) {
+    const el = document.createElement('div'); el.className = 'confetti-piece';
+    el.style.cssText = `left:${8+Math.random()*84}%;background:${cols[Math.floor(Math.random()*cols.length)]};animation-delay:${Math.random()*.3}s;animation-duration:${.8+Math.random()*.6}s;`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1600);
+  }
+}
+
+// ── INIT ON LOAD ────────────────────────────────────────────
+window.addEventListener('load', () => {
+  setTimeout(() => { initLearnParticles(); drawLearnHeatingCurve(); }, 80);
+});
+window.addEventListener('resize', () => {
+  if (document.getElementById('learn').classList.contains('active'))        { initLearnParticles(); drawLearnHeatingCurve(); }
+  if (document.getElementById('lab').classList.contains('active'))          initLab();
+  if (document.getElementById('plasma').classList.contains('active'))       initPlasma();
+  if (document.getElementById('theory').classList.contains('active'))       initTheory();
+  if (document.getElementById('graphs').classList.contains('active'))       initGraphs();
+  if (document.getElementById('enthalpy-lab').classList.contains('active')) updateEnthalpyGraph();
+});
+</script>
+</body>
+</html>
